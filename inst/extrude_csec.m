@@ -18,46 +18,49 @@
 
 ## -*- texinfo -*-
 ## @defun {[@var{xx} @var{yy} @var{zz}] =} extrude_csec (@var{x}, @var{y}, @var{z})
-## Given a y-z cross-section profile, extrude it along the specified x-axis.
+## Given a x-z cross-section profile, extrude it along the specified y-axis.
 ##
-## The given values of the @var{x} vector represents the distances on the x-axis
-## where a control cross-section will be generated. The @var{x} values don't 
-## have to be linearly spaced. For compatibility with the accepted FullSWOF_2D 
-## format the output @var{xx} will be shifted with respect to @var{x}.
+## The given values of the @var{x} vector represents the positions on the x-axis
+## where a cross-section will be copied. The @var{x} values don't 
+## have to be linearly spaced.
 ##
 ## @seealso{csec_channel2lvlsym}
 ## @end defun
 
 function [X Y Z] = extrude_csec (x, y, z)
 
- # TODO y or x or z are function handles
+  # TODO y or x or z are function handles
 
-  [X Y] = meshgrid (x, y);
-  # Assumes csec is defined on y
-  Z     = repmat (z, 1, length (x));
+  # is csec defined on x
+  if length (z) != length (x)
+    error ('Octave:invalid-input-arg', 'X and Z must have the same shape')
+  endif
+
+  [X Y] = meshgrid (x(:), y(:));
+  Z     = repmat (z(:).', length (y), 1);
 
 endfunction
 
 %!demo
 %! n = struct("Embankment",20, "Plain",10,"RiverBank",20,"RiverBed",10);
-%! [y z] = csec_channel2lvlsym (n);
-%! x = linspace (0,max(y)*3, 100).';
+%! [x z] = csec_channel2lvlsym (n);
+%! y = linspace (0,max(x)*3, 100).';
 %! [X Y Z] = extrude_csec (x, y, z);
 %! plot_topo (X,Y,Z);
 
 %!demo
 %! n = struct("Embankment",20, "Plain",10,"RiverBank",20,"RiverBed",10);
-%! [y z p] = csec_channel2lvlsym (n);
-%! x = linspace (0,max(y)*3, 100).';
+%! [x z p] = csec_channel2lvlsym (n);
+%! y = linspace (0,max(x)*3, 100).';
 %! [X Y Zc] = extrude_csec (x, y, z);
 %! nf =@(d1,d2) [cosd(d2).*sind(d1) sind(d2).*sind(d1) cosd(d1)];
 %! np = nf (10, 0);
 %! Zp = (np(1) * X + np(2) * Y ) ./ np(3);
 %! 
-%! y_ini = p.Embankment + p.Plain + p.RiverBank + 1;
-%! y_end = y_ini + p.RiverBed - 1;
-%! ch_mask = (Y > y_ini & Y < y_end);
-%! Zs = 10*sin (2*pi*3*X/max(X(:))) .* ch_mask;
+%! x_ini = p.Embankment + p.Plain + p.RiverBank + 1;
+%! x_end = x_ini + p.RiverBed - 1;
+%! ch_mask = (X > x_ini & X < x_end);
+%! Zs = 10*sin (2*pi*3*Y/max(Y(:))) .* ch_mask;
 %!
 %! Z  = Zc + Zp + Zs;
 %! zmin = min (Z(:));
@@ -68,16 +71,16 @@ endfunction
 
 %!demo
 %! n = struct("Embankment",20, "Plain",10,"RiverBank",20,"RiverBed",10);
-%! [y z p] = csec_channel2lvlsym (n);
-%! x = linspace (0,max(y)*3, 100).';
+%! [x z p] = csec_channel2lvlsym (n);
+%! y       = linspace (0,max(x)*3, 100).';
 %! [X Y Z] = extrude_csec (x, y, z);
 %! 
 %! w = p.RiverBed + p.RiverBank;
-%! DY = w/5 * sin (pi*X/max(X(:)));
-%! y_cen = p.Embankment + p.Plain + p.RiverBank + p.RiverBed/2;
+%! DX = w/5 * sin (pi*Y/max(Y(:)));
+%! x_cen = p.Embankment + p.Plain + p.RiverBank + p.RiverBed/2;
 %! sigma = w * 0.7;
-%! s_mask = 2 * exp (- 0.5 * (Y - y_cen).^4 / 2 / sigma.^4);
-%! Yt = Y + DY.* s_mask;
+%! s_mask = 2 * exp (- 0.5 * (X - x_cen).^4 / 2 / sigma.^4);
+%! Xt = X + DX.* s_mask;
 %!
-%! h = plot_topo (X,Yt,Z);
+%! h = plot_topo (Xt,Y,Z);
 %! set (h.surf, 'edgecolor', 'k');

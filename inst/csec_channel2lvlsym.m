@@ -18,12 +18,18 @@
 ## Created: 2017-12-11
 
 ## -*- texinfo -*-
-## @defun {[@var{y},@var{z},@var{params},@var{yi},@var{zi}] =} csec_channel2lvlsym (@var{N}, @var{PROP}, @var{VAL})
-## Generate a two levels trapezoidal cross-section composed of embankments, floodplains, river banks and riverbed. The length of these elements, as well as the channel and embankments height is defined by the user.
+## @defun {[@var{y},@var{z},@var{params},@var{yi},@var{zi}] =} 
+##              csec_channel2lvlsym (@var{N}, @var{PROP}, @var{VAL})
+## Generate a two levels trapezoidal cross-section composed of embankments, 
+## floodplains, river banks and riverbed. The length of these elements, as well 
+## as the channel and embankments height is defined by the user.
 ##
-## If @code{N} is a scalar then the cross-section generated will be composed of @code{N} segments of equal length.
+## If @code{N} is a scalar then the cross-section generated will be composed of 
+## @code{N} segments of equal length.
 ##
-## If @code{N} is a @code{struct}, then the value associated with @code{Embankment}, @code{Plain}, @code{RiverBank} and @code{RiverBed} represents the number of segments of each one of these sections.
+## If @code{N} is a @code{struct}, then the value associated with 
+## @code{Embankment}, @code{Plain}, @code{RiverBank} and @code{RiverBed} 
+## represents the number of segments of each one of these sections.
 ##
 ## @strong{Properties}:
 ## 
@@ -71,12 +77,7 @@ function [y z p yi zi] = csec_channel2lvlsym (N, varargin)
   zi = cumsum (dz);
   zi = [flipud(zi(2:end)); zi(2:end)];
 
-  if ~isstruct (N)
-    ys     = 0.5 * yi(end) / N;
-    y      = ys + linspace (0, yi(end), N+1).';
-    y(end) = [];
-
-  elseif isstruct (N)
+  if isstruct (N)
 
     fname = {"Embankment", "Plain", "RiverBank","RiverBed"};
     nf    = [1:4 3:-1:1];
@@ -84,15 +85,18 @@ function [y z p yi zi] = csec_channel2lvlsym (N, varargin)
     for i = 1:length(nf)
       f   = fname{nf(i)};
       n   = N.(f);
-      tmp = linspace (yi(i), yi(i+1), n+1).';
+      tmp = linspace (yi(i), yi(i+1), n + 1).';
       if isempty(y)
         y = tmp;
       else
         y = [y; tmp(2:end)];
       endif
     endfor
-    
+
+  else
+    y = linspace (0, yi(end), N+1).';
   endif
+
   z = interp1 (yi, zi, y);
 
 endfunction
