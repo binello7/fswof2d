@@ -1,2 +1,6 @@
+syntax: glob
+
 target/
-inst/terrain.m
+*terrain.m
+*/Inputs/
+*/Outputs/

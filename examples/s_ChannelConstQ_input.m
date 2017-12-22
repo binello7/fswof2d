@@ -40,7 +40,6 @@ y             = node2center (y);
 [x z p xi zi] = csec_channel2lvlsym (Nycell);
 xc            = node2center (x);
 z             = interp1 (x, z, xc);
-keyboard
 x             = xc; clear xc;
 [X Y Zc]      = extrude_csec (x, y, z);
 # Define a plane with the given slope
@@ -73,7 +72,7 @@ figure (1)
 clf
 plot_topo (X, Y, Z);
 hold on
-tmp   = H0c; tmp(tmp < sqrt (eps)) = NA;
+tmp   = H0; tmp(tmp < sqrt (eps)) = NA;
 lblue = [0.5 0.5 1];
 surf (X, Y, Z+tmp, 'edgecolor',lblue, 'facecolor','b');
 hold off
@@ -85,9 +84,10 @@ hold off
 
 data = {X,Y,Z,H0,U0,V0};
 [x_swf y_swf z_swf ...
- h_swf u_swf v_swf] = dataconvert (data{:}, 'fswof2d');
+ h_swf u_swf v_swf] = dataconvert ('fswof2d', data{:});
 # FullSOWF_2D needs an Inputs folder, check user manual.
 inputsFolder = fullfile (studyName, 'Inputs');
+mkdir (inputsFolder);
 fname        = @(s) fullfile (inputsFolder, s);
 # write out topography
 data = {x_swf, y_swf, z_swf};
