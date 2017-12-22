@@ -36,8 +36,10 @@ Nxcell = 250;
 Nycell = 140;
 # mesh nodes
 y             = linspace (0, L, Nxcell).';
-[x z p xi zi] = csec_channel2lvlsym (Nycell);
-l             = (p.Embankment + p.Plain + p.RiverBank) * 2 + p.RiverBed;
+y             = node2center (y);
+[x z p xi zi] = csec_channel2lvlsym (Nyell);
+x             = node2center (x);
+z             = interp1 (x, z, x);
 [X Y Zc]      = extrude_csec (x, y, z);
 # Define a plane with the given slope
 nf = @(d1,d2) [cosd(d2).*sind(d1) sind(d2).*sind(d1) cosd(d1)];
@@ -48,6 +50,7 @@ Z = Zc + Zp;
 
 ## Generate initial conditions
 # Define variables needed for the parametrization of the initial condition.
+
 # The inital conditons is 2 meters of water inside the channel
 zw0 = 2; # free surface at 4 meters
 # mask bed of channel
@@ -57,8 +60,8 @@ bk_mask = z < zw0 & !bd_mask;
 # mask whole channel
 ch_mask = bd_mask | bk_mask;
 
-zw0        = zw0 * ch_mask;
-h0         = zw0 - z;
+zw0          = zw0 * ch_mask;
+h0          = zw0 - z;
 h0(h0 < 0) = 0;
 
 H0 = extrude_csec (x, y, h0);
@@ -68,7 +71,7 @@ figure (1)
 clf
 plot_topo (X, Y, Z);
 hold on
-tmp   = H0; tmp(tmp < sqrt (eps)) = NA;
+tmp   = H0c; tmp(tmp < sqrt (eps)) = NA;
 lblue = [0.5 0.5 1];
 surf (X, Y, Z+tmp, 'edgecolor',lblue, 'facecolor','b');
 hold off
@@ -77,6 +80,7 @@ hold off
 #
 
 # Convert to FullSWOF_2D format
+
 data = {X,Y,Z,H0,U0,V0};
 [x_swf y_swf z_swf ...
  h_swf u_swf v_swf] = dataconvert (data{:}, 'fswof2d');
@@ -92,6 +96,8 @@ huv2file (data{:}, fname ('huv_init.dat'));
 
 ## Write out paramters files
 #
+l = (p.Embankment + p.Plain + p.RiverBank) * 2 + p.RiverBed;
+
 init_params ("ParamsFile", fname('parametres.txt'), ...
              "xCells", Nxcell, ...
              "yCells", Nycell, ...

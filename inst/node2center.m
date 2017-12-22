@@ -23,18 +23,24 @@
 ## @seealso{linspace, meshgrid}
 ## @end defun
 
-function cx = node2center (x)
+function cx = node2center (x, dim=1)
 
-  if !isvector (x)
-    error ('Octave:invalid-input-arg', 'Works only on vectors');
+  if !ismatrix (x)
+    error ('Octave:invalid-input-arg', 'Works only on 1D/2D arrays');
   endif
+  # FIXME doesn't work for dims > 2
+  if dim == 2; x = x.'; endif;
 
   # indexes
-  nx   = length (x);
+  nx   = size (x, 1);
   next = (2:nx).';
   prev = (1:nx-1).';
-  cx   = ( x(next) + x(prev) ) / 2;
+  cx   = ( x(next,1:end-1) + x(prev,1:end-1) ) / 2;
 
+  cx(cx>max(x(:))) = [];
+  cx(cx<min(x(:))) = [];
+
+  if dim == 2; cx = cx.'; endif;
 endfunction
 
 %!assert (node2center ([1 2]), 1.5)

@@ -47,33 +47,36 @@ function varargout = dataconvert (fmt, varargin)
   if idx == 1
     if !is_size (varargin{1})
       error ('Octave:invalid-input-arg', ...
-                      "'octave' format needs size as 2nd argument\n");
+                      "'octave' format needs size as 4th argument\n");
     endif
     sz          = varargin{1};
     varargin(1) = [];
   endif
 
   func      = {@(x)reshape (x, sz), ...
-               @(x)node2center (x(:))};
+               @(x)x(:)};
   varargout = cellfun (func{idx}, varargin, 'UniformOutput', false);
 
 endfunction
 
 %!demo
-%! Nx = 2;
-%! Ny = 3;
-%! xx = floor (100 * rand (Nx, Ny));
-%! yy = floor (100 * rand (Nx, Ny));
-%! hh = floor (100 * rand (Nx, Ny));
-%! [x y h] = dataconvert ('fswof2d', xx, yy, hh)
-
-%!demo
-%! Nx = 3;
-%! Ny = 4;
-%! L = Nx * Ny;
-%! x = floor (100 * rand (L,1));
-%! y = floor (100 * rand (L,1));
-%! u = floor (100 * rand (L,1));
-%! [xx yy uu] = dataconvert ('octave', [Nx Ny], x, y, u)
-
+%! Nx = 47;
+%! Ny = 56;
+%! x  = linspace (-1, 1, Nx+1).';
+%! y  = linspace (0, 1, Ny+1).';
+%!
+%! [xx yy] = meshgrid (x, y);
+%! xxco     = node2center (xx, 2);
+%! yyco     = node2center (yy);
+%! hhco     = cos(2*pi*xxco).*sin(2*pi*yyco);
+%! [xc yc hc] = dataconvert ('fswof2d', xxco, yyco, hhco);
+%! [xxc yyc hhc] = dataconvert ('octave', [Ny Nx], xc, yc, hc);
+%!
+%! figure (1)
+%! clf
+%! mesh (xxco,yyco,hhco,'facecolor','none','edgecolor','r');
+%! hold on
+%! surf (xxc,yyc, hhc,'edgecolor','none');
+%! hold off
+%! axis tight
 
