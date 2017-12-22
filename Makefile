@@ -200,7 +200,7 @@ clean-install:
 
 ## Start an Octave session with the package directories on the path for
 ## interactice test of development sources.
-run: $(install_stamp)
+run:
 	$(OCTAVE) --silent --persist \
 	  --path "inst/" --path "src/" \
 	  --eval 'if(!isempty("$(DEPENDS)")); pkg load $(DEPENDS); endif;' \

@@ -53,7 +53,8 @@ function varargout = dataconvert (fmt, varargin)
     varargin(1) = [];
   endif
 
-  func      = {@(x) reshape (x, sz), @(x) x(:)};
+  func      = {@(x)reshape (x, sz), ...
+               @(x)node2center (x(:))};
   varargout = cellfun (func{idx}, varargin, 'UniformOutput', false);
 
 endfunction
