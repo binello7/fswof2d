@@ -17,7 +17,8 @@
 ## Created: 2017-12-11
 
 ## -*- texinfo -*-
-## @defun {[@var{xx} @var{yy} @var{zz}] =} extrude_csec (@var{x}, @var{y}, @var{z})
+## @defun {@var{zz} =} extrude_csec (@var{x}, @var{y}, @var{z})
+## @defunx {[@var{xx} @var{yy} @var{zz}] =} extrude_csec (@dots{})
 ## Given a x-z cross-section profile, extrude it along the specified y-axis.
 ##
 ## The given values of the @var{x} vector represents the positions on the x-axis
@@ -33,11 +34,16 @@ function [X Y Z] = extrude_csec (x, y, z)
 
   # is csec defined on x
   if length (z) != length (x)
-    error ('Octave:invalid-input-arg', 'X and Z must have the same shape')
+    error ('Octave:invalid-input-arg', ...
+       'X and Z must have the same shape')
   endif
 
   [X Y] = meshgrid (x(:), y(:));
   Z     = repmat (z(:).', length (y), 1);
+
+  if nargout == 1
+    X = Z;
+  endif
 
 endfunction
 
