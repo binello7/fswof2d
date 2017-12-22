@@ -28,7 +28,7 @@
 ## @seealso{plot_topo, huv2file}
 ## @end defun
 
-function topo2file (x, y, z, fname='topography.dat', fmt='long')
+function topo2file (x, y, z, fname='topography.dat')
 
   header = {
 '#==============================================================', ...
@@ -44,10 +44,9 @@ function topo2file (x, y, z, fname='topography.dat', fmt='long')
 
   fid = fopen (fname, 'w'); 
   fdisp (fid, header);
-  format (fmt)
-  fdisp (fid, [x y z]);
+  fmt = [repmat(sprintf (" %%.%dg", output_precision), 1, 3) "\n"];
+  fprintf (fid, fmt, [x y z].');
   fclose(fid);
-  format
 
 endfunction
 

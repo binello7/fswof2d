@@ -56,10 +56,9 @@ function huv2file (x, y, h=[], u=[], v=[], fname='huv_init.dat', ...
 
   fid = fopen (fname, 'w'); 
   fdisp (fid, header);
-  format (fmt)
-  fdisp (fid, [x y h u v]);
+  fmt = [repmat(sprintf (" %%.%dg", output_precision), 1, 5) "\n"];
+  fprintf (fid, fmt, [x y h u v].');
   fclose(fid);
-  format
 
 endfunction 
 
