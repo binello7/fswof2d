@@ -37,9 +37,11 @@ Nycell = 140;
 # mesh nodes
 y             = linspace (0, L, Nxcell).';
 y             = node2center (y);
-[x z p xi zi] = csec_channel2lvlsym (Nyell);
-x             = node2center (x);
-z             = interp1 (x, z, x);
+[x z p xi zi] = csec_channel2lvlsym (Nycell);
+xc            = node2center (x);
+z             = interp1 (x, z, xc);
+keyboard
+x             = xc; clear xc;
 [X Y Zc]      = extrude_csec (x, y, z);
 # Define a plane with the given slope
 nf = @(d1,d2) [cosd(d2).*sind(d1) sind(d2).*sind(d1) cosd(d1)];
