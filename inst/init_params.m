@@ -333,8 +333,19 @@ function [params] = init_params (varargin)
   fmt = ' <%s>:: %s\n';
   fname = fieldnames (translate);
 
-
+  idx = [];
   for i=1:numel(fname)
+    f = fname{i};
+    if strcmp({translate.(f)}{2},'%s')
+      idx(end+1) = i;
+      continue
+    endif
+
+    fprintf (fid, sprintf (fmt, translate.(f)), p.(f));
+  endfor
+
+  for k=1:length(idx)
+    i = idx(k);
     f = fname{i};
     fprintf (fid, sprintf (fmt, translate.(f)), p.(f));
   endfor
