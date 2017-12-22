@@ -98,8 +98,10 @@ huv2file (data{:}, fname ('huv_init.dat'));
 
 ## Write out paramters files
 #
-l = (p.Embankment + p.Plain + p.RiverBank) * 2 + p.RiverBed;
-
+l    = (p.Embankment + p.Plain + p.RiverBank) * 2 + p.RiverBed;
+simT = 150;
+nbT  = 50;
+Qin  = 10;
 init_params ("ParamsFile", fname('parametres.txt'), ...
              "xCells", Nxcell, ...
              "yCells", Nycell, ...
