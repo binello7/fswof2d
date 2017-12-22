@@ -1,4 +1,4 @@
-## Copyright (C) 2016 - Juan Pablo Carbajal
+## Copyright (C) 2017 Juan Pablo Carbajal
 ##
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -13,8 +13,25 @@
 ## You should have received a copy of the GNU General Public License
 ## along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-## Author: JuanPi Carbajal <ajuanpi+dev@gmail.com>
+## Author: Juan Pablo Carbajal <ajuanpi+dev@gmail.com>
+## Created: 2017-12-22
 
+## -*- texinfo -*-
+## @defun {} matplotlib_cm (@var{name})
+## @defunx {} matplotlib_cm (@var{name}, @var{pyver})
+## Import colormap from matplotlib.pyplot
+##
+## Uses a system call to extract values from matplotlib's colormaps.
+## The colormap is selected with the @var{name} input, which should be a string.
+##
+## On successful execution the function generates a m-file @var{name}.m
+## that can be used for future call to the colormap.
+##
+## The optional input argument @var{pyver} specifies the python version to use,
+## default is 3.
+##
+## @seealso{python}
+## @end defun
 
 function matplotlib_cm (name, pyver=3)
   cmd = sprintf("\
