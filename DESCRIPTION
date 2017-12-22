@@ -1,0 +1,11 @@
+Name: fswof2d
+Version: 0.0.1
+Date: 2017-12-22
+Author: JuanPi Carbajal <ajuanpi+dev@gmail.com>, Sebastiano Rusca <sebastiano.rusca@gmail.com>
+Maintainer: Sebastiano Rusca <sebastiano.rusca@gmail.com>
+Title: FullSWOF_2D utility functions
+Description: 
+Depends: octave (>= 4.2.1)
+SystemRequirements: none
+BuildRequires: none
+License: GPLv3+
