@@ -1,5 +1,4 @@
 ## Copyright (C) 2017 Sebastiano Rusca
-## Copyright (C) 2017 Juan Pablo Carbajal
 ##
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -14,43 +13,39 @@
 ## You should have received a copy of the GNU General Public License
 ## along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-## Author: Juan Pablo Carbajal <ajuanpi+dev@gmail.com>
+## Author: Sebastiano Rusca
 ## Created: 2017-12-11
 
-% future 
-% pkg load fswf2d
-
+pkg load fswof2d
 
 if ~exist ('x_swf')
-  ## FILES
+  ## Files
+  #
   topofile    = "topography.dat";
   huvfile     = "huv_init.dat";
   paramfile   = "parameters.txt";
   init        = 'huz_initial.dat';
   evl         = 'huz_evolution.dat';
   fin         = 'huz_final.dat';
-
- #-------------------------------------------------------------------------------
-
-  ## FOLDERS
+#-------------------------------------------------------------------------------
+  ## Folders
+  #
   studyName     = "Channel_ConstQ";
   dataName      = 'data';
   inputsName    = 'Inputs';
   outputsName   = 'Outputs';
   framesName    = 'frames';
- #-------------------------------------------------------------------------------
-
-  ## CHANNEL GEOMETRY
+#-------------------------------------------------------------------------------
+  ## Channel geometry
+  #
   Nxcell = 250;
   Nycell = 140;
   L      = 250;
   simT   = 150;
   nbT    = 50;
   Qin    = 1000;
-
-  alpha = 10; # slope in degrees
- #-------------------------------------------------------------------------------
-
+  alpha  = 10; # slope in degrees
+#-------------------------------------------------------------------------------
   studyFolder   = fullfile (dataName, studyName);
   mkdir (dataName, studyName);
   inputsFolder  = fullfile (studyFolder, inputsName);
@@ -69,7 +64,6 @@ if ~exist ('x_swf')
   [y z p yi zi] = csec_channel2lvlsym (Nycell);
   l = (p.Embankment + p.Plain + p.RiverBank)*2 + p.RiverBed;
 
-
   x = [0:L/Nxcell:L].';
   [X Y Zc] = extrude_csec (x, y, z);
 
@@ -79,14 +73,14 @@ if ~exist ('x_swf')
   Zp = (np(1) * X + np(2) * Y ) ./ np(3);
 
   Z = Zc + Zp;
- #-------------------------------------------------------------------------------
-
-  ## WRITE TOPOGRAPHY TO FILE
+#-------------------------------------------------------------------------------
+  ## Write topography to file
+  #
   [x_swf y_swf z_swf] = dataconvert (X, Y, Z, 'fswof2d', [Nxcell Nycell]);
   topo2file (x_swf, y_swf, z_swf, ftopo);
 
-
-  ## WRITE HUV_INIT TO FILE
+  ## Write |huv_init| to file
+  #
   h0 = 2;
   u0 = 0;
   v0 = 0;
@@ -103,8 +97,8 @@ if ~exist ('x_swf')
 
   huv2file (x_swf, y_swf, h, u, v, fhuv);
 
-
-  ## INITIALIZE PARAMETERS
+  ## Initialize parameters
+  #
   init_params ("ParamsFile", fparam, ...
                "xCells", Nxcell, ...
                "yCells", Nycell, ...
@@ -114,15 +108,12 @@ if ~exist ('x_swf')
                "SavedTimes", nbT, ...
                "RimposedQ", Qin);
 endif
-#-------------------------------------------------------------------------------
-
 
 if exist (fevl, 'file')
 
-
   close all
   if ~exist ('HZ_evl','var')
-  
+
     init_data = load (finit);
     evl_data  = load (fevl);
     fin_data  = load (ffin);
@@ -162,45 +153,43 @@ if exist (fevl, 'file')
   view (az, el);
 #-------------------------------------------------------------------------------
 
+  # Preparing the first frame to save
+  figure(3,"position",get(0,"screensize"))
+  ZZ = HZ_evl - Z;
+  ZZ(ZZ==0) = NA;
+  ZZ = ZZ + Z;
+  colormap jet
+  view (az, el);
 
-# Preparing the first frame to save
-figure(3,"position",get(0,"screensize"))
-ZZ = HZ_evl - Z;
-ZZ(ZZ==0) = NA;
-ZZ = ZZ + Z;
-colormap jet
-view (az, el);
+  g3 = surf (X, Y, ZZ(:,:,1), 'edgecolor', 'none');
+  ht = title (sprintf ("%d",1));
+  shading interp
+  hold on
+  mesh (X, Y, Z, 'facecolor', 'w','edgecolor','k');
+  hold off
+  #colormap(ocean(64));
+  axis ([min(X(:)) max(X(:)) min(Y(:)) max(Y(:)) min(Z(:)) max(Z(:))])
+  #axis square
+  grid on;
+  #  mkdir (studyFolder, framesName);
+  #  frname = fullfile (framesFolder, sprintf ('frame-%04d.png',1));
+  #  print ('-dpng', '-r300', '-S560,421', frname);
 
-g3 = surf (X, Y, ZZ(:,:,1), 'edgecolor', 'none');
-ht = title (sprintf ("%d",1));
-shading interp
-hold on
-mesh (X, Y, Z, 'facecolor', 'w','edgecolor','k');
-hold off
-#colormap(ocean(64));
-axis ([min(X(:)) max(X(:)) min(Y(:)) max(Y(:)) min(Z(:)) max(Z(:))])
-#axis square
-grid on;
-#  mkdir (studyFolder, framesName);
-#  frname = fullfile (framesFolder, sprintf ('frame-%04d.png',1));
-#  print ('-dpng', '-r300', '-S560,421', frname);
+  for t = 2:nbT
+    set(g3, 'zdata', ZZ(:,:,t));
+    set(ht,'string',sprintf("%d",t));
 
+    # saves frame as png with 80 dpi resolution
+    #frname = fullfile (fframes, sprintf ('frame-%04d.png',t));
+    #print ('-dpng', '-r300', frname);
+    pause(0.5);
+  endfor
 
-for t = 2:nbT
-  set(g3, 'zdata', ZZ(:,:,t));
-  set(ht,'string',sprintf("%d",t));
-
-  # saves frame as png with 80 dpi resolution
-  #frname = fullfile (fframes, sprintf ('frame-%04d.png',t));
-  #print ('-dpng', '-r300', frname);
-  pause(0.5);
-endfor
-
-#%close (fig);
-#%system('ffmpeg -f image2 -i data/Channel_Flat/frames/frame-%04d.png -vcodec mpeg4 data/Channel_Flat/bump.mp4');
-#%disp('');
-#%bidon=input('Frames created ; press <enter> to start assembling');
-#%disp('Video assembled, folder ''frames'' can be erased!')
+  #%close (fig);
+  #%system('ffmpeg -f image2 -i data/Channel_Flat/frames/frame-%04d.png -vcodec mpeg4 data/Channel_Flat/bump.mp4');
+  #%disp('');
+  #%bidon=input('Frames created ; press <enter> to start assembling');
+  #%disp('Video assembled, folder ''frames'' can be erased!')
 
 endif
 

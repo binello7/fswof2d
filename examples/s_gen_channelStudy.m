@@ -61,11 +61,8 @@ dy = 1;
 L = Lx;
 l = Ly;
 
-
 Nxcell              = Lx / dx;
 Nycell              = Ly / dy;
-
-
 
 ## Simulation Parameters
 T                   = 30;
@@ -143,7 +140,6 @@ suffix_o            = "";
 
 output_f            = 1;
 
-
 # Define mesh points for every section
 n = struct (
 "Embankment", Er / dy + 1, ...
@@ -152,36 +148,23 @@ n = struct (
 "RiverBed",B / dy + 1
 );
 
-
-#for i =1:numfields (n)
-#  if strcmp (fieldnames (n){i}, 'RiverBed')
-#    Nycell = Nycell + n.RiverBed - 1;
-#  else
-#    Nycell = Nycell + 2 * (n.(fieldnames (n){i}) - 1);
-#  endif
-#endfor
-
-
 [y z p]  = csec_channel2lvlsym (n, "Embankment", Er, "Plain", Pr, 
                                 "RiverBank", rb, "RiverBed", B, 
                                 "BankHeight", H1, "EmbankmentHeight", H2);
 
-
 y(Nycell + 1:Nycell:end) = [];
 z(Nycell + 1:Nycell:end) = [];
-
 
 y += 0.5 * dy;
 
 x        = 0.5*dx:dx:Lx-0.5*dx;
 [X Y Zc] = extrude_csec (x, y, z);
 
-
 # Here is the slope surface
 alpha = 5; # slope in degrees
-nf = @(d1,d2) [cosd(d2).*sind(d1) sind(d2).*sind(d1) cosd(d1)];
-np = nf (alpha, 0);
-Zp = (np(1) * X + np(2) * Y ) ./ np(3);
+nf    = @(d1,d2) [cosd(d2).*sind(d1) sind(d2).*sind(d1) cosd(d1)];
+np    = nf (alpha, 0);
+Zp    = (np(1) * X + np(2) * Y ) ./ np(3);
 
 Z = Zc + Zp;
 
@@ -189,18 +172,12 @@ Z = Zc + Zp;
 [x_swf y_swf z_swf] = dataconvert (X, Y, Z, 'fswof2d', [Nxcell Nycell]);
 topo2file (x_swf, y_swf, z_swf, ftopo);
 
-
 ## WRITE HUV_INIT TO FILE
-h0 = 1.5
+h0 = 1.5;
 u0 = 0;
 v0 = 0;
 
 huv2file (x_swf, 
-
-
-
-
-
 
 ## INITIALIZE PARAMETERS
 init_params ("ParamsFile", fparam, ...

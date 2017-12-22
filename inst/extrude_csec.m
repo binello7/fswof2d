@@ -20,18 +20,17 @@
 ## @defun {[@var{xx} @var{yy} @var{zz}] =} extrude_csec (@var{x}, @var{y}, @var{z})
 ## Given a y-z cross-section profile, extrude it along the specified x-axis.
 ##
-## The given values of the @var{x} vector represents the distances on the x-axis where a control cross-section will be generated. The @var{x} values don't have to be linearly spaced. For compatibility with the accepted FullSWOF_2D format the output @var{xx} will be shifted with respect to @var{x}.
+## The given values of the @var{x} vector represents the distances on the x-axis
+## where a control cross-section will be generated. The @var{x} values don't 
+## have to be linearly spaced. For compatibility with the accepted FullSWOF_2D 
+## format the output @var{xx} will be shifted with respect to @var{x}.
+##
 ## @seealso{csec_channel2lvlsym}
 ## @end defun
 
 function [X Y Z] = extrude_csec (x, y, z)
 
  # TODO y or x or z are function handles
-
-  # Case when all of them are meshes
-  xs = (x(2) - x(1)) / 2;
-  x = x + xs;
-  x(end) = [];
 
   [X Y] = meshgrid (x, y);
   # Assumes csec is defined on y
