@@ -24,7 +24,7 @@
 ##
 ## @strong{Properties}:
 ##
-## @table asis
+## @table @asis
 ## @item "xCells"
 ## 250
 ## @item "yCells"
