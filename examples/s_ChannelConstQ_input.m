@@ -27,7 +27,7 @@ studyName = "Channel_ConstQ";
 
 ##
 # Channel geometry
-L     = 250;   # Channel length
+Ly    = 250;   # Channel length
 alpha = 10;    # Slope along the length in degrees
 
 ##
@@ -35,9 +35,9 @@ alpha = 10;    # Slope along the length in degrees
 Nxcell = 250;
 Nycell = 140;
 # mesh nodes
-y             = linspace (0, L, Nxcell).';
+y             = linspace (0, Ly, Nycell + 1).';
 y             = node2center (y);
-[x z p xi zi] = csec_channel2lvlsym (Nycell);
+[x z p xi zi] = csec_channel2lvlsym (Nxcell);
 xc            = node2center (x);
 z             = interp1 (x, z, xc);
 x             = xc; clear xc;
@@ -85,10 +85,13 @@ hold off
 data = {X,Y,Z,H0,U0,V0};
 [x_swf y_swf z_swf ...
  h_swf u_swf v_swf] = dataconvert ('fswof2d', data{:});
-# FullSOWF_2D needs an Inputs folder, check user manual.
-inputsFolder = fullfile (studyName, 'Inputs');
+# FullSOWF_2D needs an Inputs and Ouput folder, check user manual.
+inputsFolder  = fullfile (studyName, 'Inputs');
+outputsFolder = fullfile (studyName, 'Outputs');
+fname         = @(s) fullfile (inputsFolder, s);
 mkdir (inputsFolder);
-fname        = @(s) fullfile (inputsFolder, s);
+mkdir (outputsFolder);
+
 # write out topography
 data = {x_swf, y_swf, z_swf};
 topo2file (data{:}, fname ('topography.dat'));
@@ -98,15 +101,15 @@ huv2file (data{:}, fname ('huv_init.dat'));
 
 ## Write out paramters files
 #
-l    = (p.Embankment + p.Plain + p.RiverBank) * 2 + p.RiverBed;
+Lx   = (p.Embankment + p.Plain + p.RiverBank) * 2 + p.RiverBed;
 simT = 150;
 nbT  = 50;
 Qin  = 10;
-init_params ("ParamsFile", fname('parametres.txt'), ...
+init_params ("ParamsFile", fname('parameters.txt'), ...
              "xCells", Nxcell, ...
              "yCells", Nycell, ...
-             "xLength", L, ...
-             "yLength", l, ...
+             "xLength", Lx, ...
+             "yLength", Ly, ...
              "SimTime", simT, ...
              "SavedTimes", nbT, ...
              "RimposedQ", Qin);
