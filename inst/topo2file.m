@@ -44,7 +44,8 @@ function topo2file (x, y, z, fname='topography.dat')
 
   fid = fopen (fname, 'w'); 
   fdisp (fid, header);
-  fmt = [repmat(sprintf (" %%.%dg", output_precision), 1, 3) "\n"];
+  precision = 15; 
+  fmt = [repmat(sprintf (" %%.%dg", precision), 1, 3) "\n"];
   fprintf (fid, fmt, [x y z].');
   fclose(fid);
 

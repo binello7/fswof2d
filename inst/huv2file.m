@@ -36,8 +36,7 @@
 ## @seealso{topo2file}
 ## @end defun
 
-function huv2file (x, y, h=[], u=[], v=[], fname='huv_init.dat', ...
- fmt='long')
+function huv2file (x, y, h=[], u=[], v=[], fname='huv_init.dat')
   if isempty (h); h = zeros(size (x)); endif
   if isempty (u); u = zeros(size (x)); endif
   if isempty (v); v = zeros(size (x)); endif
@@ -56,7 +55,8 @@ function huv2file (x, y, h=[], u=[], v=[], fname='huv_init.dat', ...
 
   fid = fopen (fname, 'w'); 
   fdisp (fid, header);
-  fmt = [repmat(sprintf (" %%.%dg", output_precision), 1, 5) "\n"];
+  precision = 15; 
+  fmt = [repmat(sprintf (" %%.%dg", precision), 1, 5) "\n"];
   fprintf (fid, fmt, [x y h u v].');
   fclose(fid);
 

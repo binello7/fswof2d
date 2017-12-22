@@ -81,7 +81,6 @@ hold off
 #
 
 # Convert to FullSWOF_2D format
-
 data = {X,Y,Z,H0,U0,V0};
 [x_swf y_swf z_swf ...
  h_swf u_swf v_swf] = dataconvert ('fswof2d', data{:});
