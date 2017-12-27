@@ -24,7 +24,7 @@ studyName = "Channel_ConstQ";
 
 ## Generate topography
 # Define variables needed for the parametrization of the topography.
-
+keyboard
 ##
 # Channel geometry
 Ly    = 250;   # Channel length
