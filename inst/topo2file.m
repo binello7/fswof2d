@@ -23,7 +23,7 @@
 ## Write a FullSWOF_2D conform topography file.
 ##
 ## If no @var{filename} is specified the default name 
-## @asis{'topography.dat'} is used.
+## @code{topography.dat} is used.
 ##
 ## @seealso{plot_topo, huv2file}
 ## @end defun
