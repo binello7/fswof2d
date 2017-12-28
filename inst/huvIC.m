@@ -17,7 +17,18 @@
 ## Created: YYY-YY-DD
 
 
+## -*- texinfo -*-
+## @defun huvIC ()
+## Generate initial conditions.
+## @seealso{huv2file}
+## @end defun
 
+
+function huvIC (n)
+  for i = 1:n
+    disp ("huvIC function")
+  end
+endfunction
 
 
 
