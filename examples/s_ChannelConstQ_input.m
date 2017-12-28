@@ -87,8 +87,8 @@ data = {X,Y,Z,H0,U0,V0};
 [x_swf y_swf z_swf ...
  h_swf u_swf v_swf] = dataconvert ('fswof2d', data{:});
 # FullSOWF_2D needs an Inputs and Ouput folder, check user manual.
-inputsFolder  = fullfile (studyName, 'Inputs');
-outputsFolder = fullfile (studyName, 'Outputs');
+inputsFolder  = fullfile (dataFolder, studyName, 'Inputs');
+outputsFolder = fullfile (dataFolder, studyName, 'Outputs');
 fname         = @(s) fullfile (inputsFolder, s);
 mkdir (inputsFolder);
 mkdir (outputsFolder);
