@@ -1,4 +1,5 @@
 ## Copyright (C) 2017 Sebastiano Rusca
+## Copyright (C) 2017 Juan Pablo Carbajal
 ##
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -20,11 +21,12 @@ pkg load fswof2d
 
 ## Global parameters
 #
-studyName = "Channel_ConstQ";
+dataFolder  = "data";
+studyName   = "Channel_ConstQ";
 
 ## Generate topography
 # Define variables needed for the parametrization of the topography.
-keyboard
+
 ##
 # Channel geometry
 Ly    = 250;   # Channel length
