@@ -2,13 +2,13 @@
 DAT="data"
 EXP="ChannelVarQ"
 
-octave s_ChannelVarQ_input
+octave s_ChannelVarQ_input.m
 
 cd ./$DAT/$EXP
 
 for i in $(ls); do
   cd ./$i
-  nohup fullswof2d &
+  nohup fswof2d &
 
   if(( ($i % $(nproc)) == 0))
   then 
