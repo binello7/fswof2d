@@ -6,3 +6,4 @@ target/
 */Outputs/
 */frames/
 *.mp4
+*.out
