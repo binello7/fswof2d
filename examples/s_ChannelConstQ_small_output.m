@@ -112,7 +112,7 @@ endfor
 
 if sv
   close (3)
-  system ('ffmpeg -f image2 -i data/Channel_Flat/frames/frame-%04d.png -vcodec mpeg4 data/Channel_Flat/bump.mp4');
+  system ('ffmpeg -f image2 -i data/ChannelConstQ_small/frames/frame-%04d.png -vcodec mpeg4 data/ChannelConstQ_small/animation.mp4');
   bidon=input ('Frames created ; press <enter> to start assembling');
   disp ('Video assembled, folder ''frames'' can be erased!')
 endif
