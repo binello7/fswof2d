@@ -1,4 +1,5 @@
 ## Copyright (C) 2017 Juan Pablo Carbajal
+## Copyright (C) 2017 Sebastiano Rusca
 ##
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by

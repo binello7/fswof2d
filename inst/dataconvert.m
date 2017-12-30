@@ -53,7 +53,7 @@ function varargout = dataconvert (fmt, varargin)
     varargin(1) = [];
   endif
 
-  func      = {@(x)reshape (x, sz), ...
+  func      = {@(x)reshape (x, sz(2), sz(1)), ...
                @(x)x(:)};
   varargout = cellfun (func{idx}, varargin, 'UniformOutput', false);
 
@@ -68,7 +68,7 @@ endfunction
 %! [xxco yyco] = meshgrid (node2center (x), node2center (y));
 %! hhco     = cos(2*pi*xxco).*sin(2*pi*yyco);
 %! [xc yc hc] = dataconvert ('fswof2d', xxco, yyco, hhco);
-%! [xxc yyc hhc] = dataconvert ('octave', [Ny Nx], xc, yc, hc);
+%! [xxc yyc hhc] = dataconvert ('octave', [Nx Ny], xc, yc, hc);
 %!
 %! figure (1)
 %! clf

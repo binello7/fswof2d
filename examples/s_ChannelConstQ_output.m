@@ -17,184 +17,105 @@
 ## Created: 2017-12-11
 
 pkg load fswof2d
+close all
 
-studyName    = "Channel_ConstQ";
-inputsFolder = fullfile (studyName, 'Inputs');
-inpfname     = @(s) fullfile (inputsFolder, s);
-params       = read_params (inpfname('parameters.txt'));
+if ~exist ('HZ_evl', 'var')
+  ## Global parameters
+  #
+  dataFolder  = "data";
+  studyName   = "Channel_ConstQ";
+
+  ## Read outputs from files
+  #
+  outputsFolder = fullfile (dataFolder, studyName, 'Outputs');
+  fname         = @(s) fullfile (outputsFolder, s);
+
+  data_init = load (fname ('huz_initial.dat'));
+  data_fin  = load (fname ('huz_final.dat'));
+  data_evl  = load (fname ('huz_evolution.dat'));
+
+  paramsfile = fullfile (dataFolder, studyName, 'Inputs', 'parameters.txt');
+  params = read_params (paramsfile);
+
+  ## Get topography and final state free surface
+  # Topography in FullSWOF_2D format
+  x_swf = data_init(:,1);
+  y_swf = data_init(:,2);
+  z_swf = data_init(:,7);
+
+  # Convert the data from 'fswof2d' to 'octave'
+  Nx = params.Nxcell;
+  Ny = params.Nycell;
+  [X Y Z] = dataconvert ('octave', [Nx Ny], x_swf, y_swf, z_swf);
+
+  tsteps = params.nbtimes;
+  for t = 1:tsteps
+    idx_1 = 1 + (t - 1) * Nx * Ny;
+    idx_2 = t * Nx * Ny;
+    span = idx_1:idx_2;
+
+    hz_evl(:,t)  = data_evl(span,6);
+    HZ_evl(:,:,t)  = dataconvert ('octave', [Nx Ny], hz_evl(:,t));
+  endfor
+endif
+
+az = 70;
+el = 45;
+
+figure (1)
+g1 = mesh (X, Y, HZ_evl(:,:,1), 'FaceColor', 'white');
+colormap ocean;
+grid on;
+view (az, el);
+
+figure (2)
+g2 = mesh (X, Y, HZ_evl(:,:,end), 'facecolor', 'white');
+grid on;
+colormap ocean;
+view (az, el);
 
 
-#if ~exist ('x_swf')
-#  ## Files
-#  #
-#  topofile    = "topography.dat";
-#  huvfile     = "huv_init.dat";
-#  paramfile   = "parameters.txt";
-#  init        = 'huz_initial.dat';
-#  evl         = 'huz_evolution.dat';
-#  fin         = 'huz_final.dat';
-##-------------------------------------------------------------------------------
-#  ## Folders
-#  #
-#  studyName     = "Channel_ConstQ";
-#  dataName      = 'data';
-#  inputsName    = 'Inputs';
-#  outputsName   = 'Outputs';
-#  framesName    = 'frames';
-##-------------------------------------------------------------------------------
-#  ## Channel geometry
-#  #
-#  Nxcell = 250;
-#  Nycell = 140;
-#  L      = 250;
-#  simT   = 150;
-#  nbT    = 50;
-#  Qin    = 1000;
-#  alpha  = 10; # slope in degrees
-##-------------------------------------------------------------------------------
-#  studyFolder   = fullfile (dataName, studyName);
-#  mkdir (dataName, studyName);
-#  inputsFolder  = fullfile (studyFolder, inputsName);
-#  mkdir (studyFolder, inputsName);
-#  outputsFolder = fullfile (studyFolder, outputsName);
-#  mkdir (studyFolder, outputsName);
-#  framesFolder  = fullfile (studyFolder, framesName);
-#  finit  = fullfile (outputsFolder, init);
-#  fevl   = fullfile (outputsFolder, evl);
-#  ffin   = fullfile (outputsFolder, fin);
+figure(3,"position",get(0,"screensize"))
+ZZ = HZ_evl - Z;
+ZZ(ZZ==0) = NA;
+ZZ = ZZ + Z;
+view (az, el);
+g3 = surf (X, Y, ZZ(:,:,1), 'edgecolor', 'none');
+shading interp
+hold on
+mesh (X, Y, Z, 'facecolor', 'w','edgecolor','k');
+hold off
+#colormap jet
+colormap(ocean(64));
+axis ([min(X(:)) max(X(:)) min(Y(:)) max(Y(:)) min(Z(:)) max(Z(:))])
+#axis square
+grid on;
 
-#  ftopo  = fullfile (inputsFolder, topofile);
-#  fhuv   = fullfile (inputsFolder, huvfile);
-#  fparam = fullfile (inputsFolder, paramfile);
+sv = true;
+# Save first frame if 'sv' is active
+if sv
+  framesFolder = fullfile (dataFolder, studyName, 'frames');
+  mkdir (framesFolder);
+  frame = fullfile (framesFolder, sprintf ('frame-%04d.png', 1));
+  print ('-dpng', '-r300', '-S1920,1080', frame);
+endif
 
-#  [y z p yi zi] = csec_channel2lvlsym (Nycell);
-#  l = (p.Embankment + p.Plain + p.RiverBank)*2 + p.RiverBed;
+for t = 2:tsteps
+  set(g3, 'zdata', ZZ(:,:,t));
+  pause(0.5);
+  if sv
+    #saves each frame if 'sv' is active
+    frame = fullfile (framesFolder, sprintf ('frame-%04d.png', t));
+    print ('-dpng', '-r300', '-S1920,1080', frame);
+  endif
+endfor
 
-#  x = [0:L/Nxcell:L].';
-#  [X Y Zc] = extrude_csec (x, y, z);
+if sv
+  close (3)
+  system ('ffmpeg -f image2 -i data/Channel_ConstQ/frames/frame-%04d.png -vcodec mpeg4 data/Channel_ConstQ/animation.mp4');
+  bidon=input ('Frames created ; press <enter> to start assembling');
+  disp ('Video assembled, folder ''frames'' can be erased!')
+endif
 
-#  # Here is the slope surface
-#  nf = @(d1,d2) [cosd(d2).*sind(d1) sind(d2).*sind(d1) cosd(d1)];
-#  np = nf (alpha, 0);
-#  Zp = (np(1) * X + np(2) * Y ) ./ np(3);
 
-#  Z = Zc + Zp;
-##-------------------------------------------------------------------------------
-#  ## Write topography to file
-#  #
-#  [x_swf y_swf z_swf] = dataconvert (X, Y, Z, 'fswof2d', [Nxcell Nycell]);
-#  topo2file (x_swf, y_swf, z_swf, ftopo);
 
-#  ## Write |huv_init| to file
-#  #
-#  h0 = 2;
-#  u0 = 0;
-#  v0 = 0;
-
-#  n = length (x_swf);
-
-#  h = zeros (n, 1);
-#  u = zeros (n, 1);
-#  v = zeros (n, 1);
-
-#  y1 = (yi(3) + yi(4)) /2;
-#  y2 = (yi(5) + yi(6)) /2;
-#  h(y_swf > y1 & y_swf < y2 & x_swf > x(1) & x_swf < x(end)) = h0;
-
-#  huv2file (x_swf, y_swf, h, u, v, fhuv);
-
-#  ## Initialize parameters
-#  #
-#  init_params ("ParamsFile", fparam, ...
-#               "xCells", Nxcell, ...
-#               "yCells", Nycell, ...
-#               "xLength", L, ...
-#               "yLength", l, ...
-#               "SimTime", simT, ...
-#               "SavedTimes", nbT, ...
-#               "RimposedQ", Qin);
-#endif
-
-#if exist (fevl, 'file')
-
-#  close all
-#  if ~exist ('HZ_evl','var')
-
-#    init_data = load (finit);
-#    evl_data  = load (fevl);
-#    fin_data  = load (ffin);
-
-#    hz_init = init_data(:,6);
-#    hz_fin  = fin_data(:,6);
-
-#    [~, ~, HZ_init] = dataconvert (x_swf, y_swf, hz_init, 'octave', ...
-#    [Nxcell Nycell]);
-#    [~, ~, HZ_fin]  = dataconvert (x_swf, y_swf, hz_fin, 'octave', ...
-#    [Nxcell Nycell]);
-
-#    for t = 1:nbT
-#      idx_1 = 1 + (t - 1) * Nxcell * Nycell;
-#      idx_2 = t * Nxcell * Nycell;
-#      span = idx_1:idx_2;
-
-#      hz_evl(:,t)  = evl_data(span, 6);
-#      [~, ~, HZ_evl(:,:,t)]  = ...
-#      dataconvert (x_swf, y_swf, hz_evl(:,t), 'octave', [Nxcell Nycell]);
-#    endfor
-#  endif
-
-#  az = 70;
-#  el = 45;
-
-#  figure (1)
-#  g1 = mesh (X, Y, HZ_init, 'FaceColor', 'white');
-#  colormap ocean;
-#  grid on;
-#  view (az, el);
-
-#  figure (2)
-#  g2 = mesh (X, Y, HZ_fin, 'facecolor', 'white');
-#  grid on;
-#  colormap ocean;
-#  view (az, el);
-##-------------------------------------------------------------------------------
-
-#  # Preparing the first frame to save
-#  figure(3,"position",get(0,"screensize"))
-#  ZZ = HZ_evl - Z;
-#  ZZ(ZZ==0) = NA;
-#  ZZ = ZZ + Z;
-#  colormap jet
-#  view (az, el);
-
-#  g3 = surf (X, Y, ZZ(:,:,1), 'edgecolor', 'none');
-#  ht = title (sprintf ("%d",1));
-#  shading interp
-#  hold on
-#  mesh (X, Y, Z, 'facecolor', 'w','edgecolor','k');
-#  hold off
-#  #colormap(ocean(64));
-#  axis ([min(X(:)) max(X(:)) min(Y(:)) max(Y(:)) min(Z(:)) max(Z(:))])
-#  #axis square
-#  grid on;
-#  #  mkdir (studyFolder, framesName);
-#  #  frname = fullfile (framesFolder, sprintf ('frame-%04d.png',1));
-#  #  print ('-dpng', '-r300', '-S560,421', frname);
-
-#  for t = 2:nbT
-#    set(g3, 'zdata', ZZ(:,:,t));
-#    set(ht,'string',sprintf("%d",t));
-
-#    # saves frame as png with 80 dpi resolution
-#    #frname = fullfile (fframes, sprintf ('frame-%04d.png',t));
-#    #print ('-dpng', '-r300', frname);
-#    pause(0.5);
-#  endfor
-
-#  #%close (fig);
-#  #%system('ffmpeg -f image2 -i data/Channel_Flat/frames/frame-%04d.png -vcodec mpeg4 data/Channel_Flat/bump.mp4');
-#  #%disp('');
-#  #%bidon=input('Frames created ; press <enter> to start assembling');
-#  #%disp('Video assembled, folder ''frames'' can be erased!')
-
-#endif

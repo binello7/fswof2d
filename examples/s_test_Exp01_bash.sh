@@ -8,3 +8,6 @@ cp ./$DAT/exp01_topography.txt ./$DAT/$EXP/Inputs
 
 cd ./$DAT/$EXP
 fullswof2d
+
+cd ../..
+octave s_test_Exp01_output.m
