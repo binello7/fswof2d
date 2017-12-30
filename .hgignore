@@ -4,3 +4,5 @@ target/
 *terrain.m
 */Inputs/
 */Outputs/
+*/frames/
+*.mp4
