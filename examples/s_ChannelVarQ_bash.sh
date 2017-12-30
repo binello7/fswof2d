@@ -1,3 +1,4 @@
+
 DAT="data"
 EXP="ChannelVarQ"
 
@@ -7,10 +8,12 @@ cd ./$DAT/$EXP
 
 for i in $(ls); do
   cd ./$i
-  fullswof2d
+  nohup fullswof2d &
+
+  if(( ($i % $(nproc)) == 0))
+  then 
+    wait; 
+  fi
+  cd ..
 done
 
-
-
-cd ../..
-octave s_test_Exp01_output.m
