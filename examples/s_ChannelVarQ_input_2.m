@@ -145,7 +145,7 @@ for i=1:nQ
   pfile       = fname (sprintf ("parameters%s.txt", suffix));
   printf ("Writing file %s\n", pfile); fflush (stdout);
 
-  params{j+1} = Qin(i);
+  params{2*j} = Qin(i);
   params2file (params{:}, ...
                'ParamsFile', pfile, ...
                'OutputsSuffix', suffix);
