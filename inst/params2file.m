@@ -19,7 +19,7 @@
 
 
 ## -*- texinfo -*-
-## @defun {[@var{params}] =} params2file (@var{PROP}, @var{VAL})
+## @defun {@var{params} =} params2file (@var{PROP}, @var{VAL})
 ## Create the FullSWOF_2D compatible input file @code{parameters.txt}.
 ##
 ## @strong{Properties}:
@@ -146,7 +146,7 @@
 
 
 
-function [params] = params2file (varargin)
+function params = params2file (varargin)
 
   translate = struct (
   "xCells", {'Nxcell', '%d'}, ...
@@ -225,18 +225,13 @@ function [params] = params2file (varargin)
   "OutputFormat", {'output_f', '%d'}
   );
 
-
-
   ### DEFAULT INIZIALIZATION OF THE FUNCTION ###
   parser = inputParser ();
   parser.FunctionName = 'params2file';
-
   #TODO
   #checker = ...
-
-  parser.addParamValue ("ParamsFile", 'parameters.txt'); # name of the generated
-                                                         # parameters file
-
+  parser.addParamValue ("ParamsFile", []); # name of the generated  parameters
+                                           # file. If empty, do not write file.
 
   parser.addParamValue ("xCells", 250);  # nodes in x-direction
   parser.addParamValue ("yCells", 140);   # nodes in y-direction
@@ -249,33 +244,28 @@ function [params] = params2file (varargin)
   parser.addParamValue ("xLength", 250);    # length of domain in x [m]
   parser.addParamValue ("yLength", 140);    # length of the domain in y [m]
 
-
   parser.addParamValue ("LBoundCond", 2);     # 1=imp.h, 2=wall, 3=neumann,
                                               # 4=periodic, 5=imp.q at x=0
   parser.addParamValue ("LimposedQ", 0.0005); # imposed discharge at x=0 [m3/s]
   parser.addParamValue ("LimposedH", 0.005);  # imposed water height at x=0 [m]
-
 
   parser.addParamValue ("RBoundCond", 2);     # 1=imp.h, 2=wall, 3=neumann,
                                               # 4=periodic, 5=imp.q at xmax
   parser.addParamValue ("RimposedQ", 0.0005);  # imposed discharge at xmax [m3/s]
   parser.addParamValue ("RimposedH", 0.005);  # imposed water height at xmax [m]
 
-
   parser.addParamValue ("BotBoundCond", 2);    # 1=imp.h, 2=wall, 3=neumann,
                                                # 4=periodic, 5=imp.q at y=0
   parser.addParamValue ("BotImposedQ", 0.0005);# imposed discharge at y=0 [m3/s]
   parser.addParamValue ("BotImposedH", 0.005); # imposed water height at y=0 [m]
-
 
   parser.addParamValue ("TopBoundCond", 2);    # 1=imp.h, 2=wall, 3=neumann,
                                                # 4=periodic, 5=imp.q at ymax
   parser.addParamValue ("TopImposedQ", 0.0005);# imposed discharge at ymax [m3/s]
   parser.addParamValue ("TopImposedH", 0.005); # imposed water height at ymax [m]
 
-
   parser.addParamValue ("FrictInit", 2); # 1=file, 2=const_coef
-  parser.addParamValue ("FrictLaw", 1);  # 0=No Friction, 1=Manning, 
+  parser.addParamValue ("FrictLaw", 1);  # 0=No Friction, 1=Manning,
                                          # 2=Darcy-Weisbach, 3=laminar
   parser.addParamValue ("FrictFile", 'friction_init.dat'); # friction file
   parser.addParamValue ("FrictCoef", 0.03); # friction coefficient
@@ -291,7 +281,7 @@ function [params] = params2file (varargin)
   parser.addParamValue ("CrustThickness", 2); # thickness of the crust [m]
   parser.addParamValue ("CrustCoef", 1);      # crust coefficient
   parser.addParamValue ("CrustFile", 'crust.dat'); # crust file name
-  
+
   parser.addParamValue ("HydrCondCrustInit", 2); # 1=file, 2=const_coef
   parser.addParamValue ("HydrCondCrustCoef", 1.8e-6);
   parser.addParamValue ("HydrCondCrustFile", 'crust_hydr_cond.dat'); # hydro cond crust file
@@ -311,7 +301,7 @@ function [params] = params2file (varargin)
   parser.addParamValue ("MaxInfRateInit", 2);       # 1=file 2=const_coef
   parser.addParamValue ("MaxInfRateCoef", 1.7e-4);  # max inf rate coefficient
   parser.addParamValue ("MaxInfRateFile", 'max_inf.dat'); # max inf rate file
-  
+
   parser.addParamValue ("TopographyInit", 1); # 1=file, 2=flat, 3=Thacker
   parser.addParamValue ("TopographyFile", 'topography.dat'); # topography file
 
@@ -325,34 +315,44 @@ function [params] = params2file (varargin)
   parser.addParamValue ("OutputsSuffix", ''); # suffix for "Outputs" folder
   parser.addParamValue ("OutputFormat", 1);   # 1=gnuplot, 2=vtk
 
-
   parser.parse (varargin{:});
   p = parser.Results;
 
-  fid = fopen (p.ParamsFile, 'w');
-  fmt = ' <%s>:: %s\n';
-  fname = fieldnames (translate);
+  if !isempty (p.ParamsFile)
+    fid = fopen (p.ParamsFile, 'w');
+    fmt = ' <%s>:: %s\n';
+    fname = fieldnames (translate);
 
-  idx = [];
-  for i=1:numel(fname)
-    f = fname{i};
-    if strcmp({translate.(f)}{2},'%s')
-      idx(end+1) = i;
-      continue
-    endif
+    idx = [];
+    for i=1:numel(fname)
+      f = fname{i};
+      if strcmp({translate.(f)}{2},'%s')
+        idx(end+1) = i;
+        continue
+      endif
 
-    fprintf (fid, sprintf (fmt, translate.(f)), p.(f));
-  endfor
+      fprintf (fid, sprintf (fmt, translate.(f)), p.(f));
+    endfor
 
-  for k=1:length(idx)
-    i = idx(k);
-    f = fname{i};
-    fprintf (fid, sprintf (fmt, translate.(f)), p.(f));
-  endfor
+    for k=1:length(idx)
+      i = idx(k);
+      f = fname{i};
+      fprintf (fid, sprintf (fmt, translate.(f)), p.(f));
+    endfor
 
-  fclose (fid);
+    fclose (fid);
+  else
+    warning ('Octave:fswof2d:params2file:no-file-generated', ...
+   "No parameters file was generated, to do it set the option 'ParamsFile'.\n");
+  endif
+
+  if nargout
+    k      = fieldnames (p);
+    v      = cellfun (@(f)getfield(p,f), k, 'unif', 0);
+
+    params          = cell (1, 2 * numel (k));
+    params(1:2:end) = k;
+    params(2:2:end) = v;
+  endif
 
 endfunction
-
-
-
