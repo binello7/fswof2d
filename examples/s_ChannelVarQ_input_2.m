@@ -19,19 +19,19 @@
 
 ## Input files for ChannelVarQ study
 # We generate all the inputs files needed to study the response of a given
-# topograph to different values of the upstream input flow |Q|.
+# topography to different values of the upstream input flow |Q|.
 #
 # Since |Q| is defined only in the parameters file, this is the only file that
 # needs to be generated several times.
-# The values that we are going to use are define din the Qin_values variable
+# The values that we are going to use are defined in the Qin_values variable
 # stored in the file |studyFolder/Qin_values.dat|
 
-%pkg load fswof2d
+pkg load fswof2d
 
 ## Global parameters
 #
 dataFolder  = 'data';
-studyName   = 'ChannelVarQ';
+studyName   = 'ChannelVarQ_2';
 
 ## Study variable
 # These are the variables that we will change in this study
@@ -122,7 +122,6 @@ simT      = 150;
 nbT       = 50;
 topbound  = 5;
 botbound  = 3;
-studyNr   = 1;
 # template for parameters
 params    = params2file (
             "xCells", Nxcell, ...
