@@ -4,6 +4,9 @@ target/
 *terrain.m
 */Inputs/
 */Outputs/
+*/Outputs_*/
 */frames/
 *.mp4
 *.out
+*.tar.gz
+*/data/*/*.sh
