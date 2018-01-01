@@ -22,19 +22,24 @@ close all
 if ~exist ('HZ_evl', 'var')
   ## Global parameters
   #
+  suff        = 1;
+  suff_fmt    = '_%02d';
   dataFolder  = "data";
-  studyName   = "Channel_ConstQ_small";
+  studyName   = "ChannelVarQ";
+  subStudy   = strcat (studyName, sprintf (suff_fmt, suff));
 
   ## Read outputs from files
   #
-  outputsFolder = fullfile (dataFolder, studyName, 'Outputs');
+  outputsFolder = fullfile (dataFolder, studyName, subStudy, 'Outputs');
   fname         = @(s) fullfile (outputsFolder, s);
 
   data_init = load (fname ('huz_initial.dat'));
   data_fin  = load (fname ('huz_final.dat'));
   data_evl  = load (fname ('huz_evolution.dat'));
 
-  paramsfile = fullfile (dataFolder, studyName, 'Inputs', 'parameters.txt');
+  paramsfile = fullfile (dataFolder, studyName, subStudy, ...
+  'Inputs', 'parameters.txt');
+
   params = read_params (paramsfile);
 
   ## Get topography and final state free surface
