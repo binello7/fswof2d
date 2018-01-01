@@ -144,9 +144,7 @@
 ## @end table
 ## @end defun
 
-
-
-function params = params2file (varargin)
+function p = params2file (varargin)
 
   translate = struct (
   "xCells", {'Nxcell', '%d'}, ...
@@ -224,6 +222,14 @@ function params = params2file (varargin)
   "OutputsSuffix", {'suffix_o', '%s'}, ...
   "OutputFormat", {'output_f', '%d'}
   );
+
+  ### If there is only one input argument it should be a structure
+  if nargin == 1
+    if !isstruct (varargin{1})
+      error
+    endif
+    varargin = struct2params (varargin{1});
+  endif
 
   ### DEFAULT INIZIALIZATION OF THE FUNCTION ###
   parser = inputParser ();
@@ -346,13 +352,25 @@ function params = params2file (varargin)
    "No parameters file was generated, to do it set the option 'ParamsFile'.\n");
   endif
 
-  if nargout
-    k      = fieldnames (p);
-    v      = cellfun (@(f)getfield(p,f), k, 'unif', 0);
+endfunction
 
-    params          = cell (1, 2 * numel (k));
-    params(1:2:end) = k;
-    params(2:2:end) = v;
-  endif
+function params = struct2params (s)
+
+  k = fieldnames (s);
+  v = cellfun (@(f)getfield(s,f), k, 'unif', 0);
+
+  params          = cell (1, 2 * numel (k));
+  params(1:2:end) = k;
+  params(2:2:end) = v;
 
 endfunction
+
+%!test
+%! warning ('off', 'Octave:fswof2d:params2file:no-file-generated', 'local');
+%! params2file (params2file ());
+
+%!test
+%! warning ('off', 'Octave:fswof2d:params2file:no-file-generated', 'local');
+%! p  = params2file ();
+%! p2 = params2file (p);
+%! assert (p, p2);

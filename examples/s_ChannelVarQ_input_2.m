@@ -134,21 +134,22 @@ params    = params2file (
             "BotBoundCond", botbound, ...
             "TopBoundCond", topbound
             );
-[~,j] = ismember ("TopImposedQ", params(1:2:end));
-if !j; error ("Option not found"); endif
 
 # left padding with zeros
 ns = floor (log10 (nQ)) + 1;
 suffix_fmt = sprintf ("_%%0%dd", ns);
 for i=1:nQ
-  suffix      = sprintf(suffix_fmt, i);
-  pfile       = fname (sprintf ("parameters%s.txt", suffix));
-  printf ("Writing file %s\n", pfile); fflush (stdout);
+  # update Q
+  params.TopImposedQ = Qin(i);
+  # update output suffix
+  suffix               = sprintf (suffix_fmt, i);
+  params.OutputsSuffix = suffix;
+  # update filename
+  pfile             = fname (sprintf ("parameters%s.txt", suffix));
+  params.ParamsFile = pfile;
 
-  params{2*j} = Qin(i);
-  params2file (params{:}, ...
-               'ParamsFile', pfile, ...
-               'OutputsSuffix', suffix);
+  printf ("Writing file %s\n", pfile); fflush (stdout);
+  params2file (params);
 
   outputsFolder = fullfile (studyFolder, sprintf("Outputs%s", suffix));
   if !exist (outputsFolder, 'dir')
