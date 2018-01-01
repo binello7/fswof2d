@@ -50,7 +50,7 @@ clear tmp
 ##
 # Channel geometry
 Ly    = 100;   # Channel length
-alpha = 5;    # Slope along the length in degrees
+alpha = 0.6;    # Slope along the length in degrees
 
 ##
 # Topography mesh parameters
