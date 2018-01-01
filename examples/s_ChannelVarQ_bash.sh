@@ -8,12 +8,9 @@ cd ./$DAT/$EXP
 
 for i in $(ls); do
   cd ./$i
-  nohup fswof2d &
+  fswof2d
+  cd .. 
 
-  if(( ($i % $(nproc)) == 0))
-  then 
-    wait; 
-  fi
-  cd ..
+  if(( ($i % $(nproc)) == 0));
+  then wait; fi
 done
-
