@@ -22,11 +22,10 @@ close all
 if ~exist ('HZ_evl', 'var')
   ## Global parameters
   #
-  suff        = 2;
-  suff_fmt    = '_%02d';
+  suff        = 3;
   dataFolder  = "data";
   studyName   = "ChannelVarQ_2";
-  outputsName = strcat ("Outputs", sprintf (suff_fmt, suff));
+  outputsName = sprintf ("Outputs_%02d", suff);
 
   ## Read outputs from files
   #
@@ -37,7 +36,7 @@ if ~exist ('HZ_evl', 'var')
   data_fin  = load (fname ('huz_final.dat'));
   data_evl  = load (fname ('huz_evolution.dat'));
 
-  paramsfile = fullfile (dataFolder, studyName, 'Inputs', 'parameters_02.txt');
+  paramsfile = fullfile (dataFolder, studyName, 'Inputs', sprintf ("parameters_%02d.txt", suff));
 
   params = read_params (paramsfile);
 
@@ -80,9 +79,9 @@ view (az, el);
 
 
 figure(3,"position",get(0,"screensize"))
-ZZ = HZ_evl - Z;
-ZZ(ZZ==0) = NA;
-ZZ = ZZ + Z;
+ZZ = HZ_evl;
+#ZZ(ZZ==0) = NA;
+#ZZ = ZZ + Z;
 view (az, el);
 g3 = surf (X, Y, ZZ(:,:,1), 'edgecolor', 'none');
 shading interp
