@@ -20,9 +20,11 @@
 ## -*- texinfo -*-
 ## @defun {[@var{y},@var{z},@var{params},@var{yi},@var{zi}] =} 
 ##              csec_channel2lvlsym (@var{N}, @var{PROP}, @var{VAL})
-## Generate a two levels trapezoidal cross-section composed of embankments, 
-## floodplains, river banks and riverbed. The length of these elements, as well 
-## as the channel and embankments height is defined by the user.
+## Generate a two levels trapezoidal cross-section.
+##
+## The generated cross-section s composed of embankments, floodplains, river 
+## banks and riverbed. The length of these elements, as well as the channel and 
+## embankments height is defined by the user.
 ##
 ## If @code{N} is a scalar then the cross-section generated will be composed of 
 ## @code{N} segments of equal length.
