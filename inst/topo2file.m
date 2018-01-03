@@ -22,10 +22,14 @@
 ## @defunx topo2file (@dots{}, @var{filename})
 ## Write a FullSWOF_2D conform topography file.
 ##
+## Given vectors of @var{x}, @var{y}, @var{z} values prints them to a file.
+## All values have to be given in FullSWOF_2D format (compare function
+## @code{dataconvert}).
+##
 ## If no @var{filename} is specified the default name 
 ## @code{topography.dat} is used.
 ##
-## @seealso{plot_topo, huv2file}
+## @seealso{dataconvert, plot_topo, huv2file}
 ## @end defun
 
 function topo2file (x, y, z, fname='topography.dat')
