@@ -18,22 +18,23 @@
 ## Created: 2017-12-07
 
 ## -*- texinfo -*-
-## @defun huv2file (@var{xx}, @var{yy})
-## @defunx huv2file (@dots{}, @var{hh}, @var{uu}, @var{vv})
-## @defunx {[@dots{}] =} huv2file (@dots{}, @var{filename})
+## @defun huv2file (@var{x}, @var{y})
+## @defunx huv2file (@dots{}, @var{h}, @var{u}, @var{v})
+## @defunx huv2file (@dots{}, @var{filename})
 ## Write initial conditions file.
 ##
-## Given matrices of @var{xx}, @var{yy}, @var{hh}, @var{uu}, 
-## @var{vv} values, prints them in file with FullSWOF_2D 
-## compatible format.
+## Given vectors of @var{x}, @var{y}, @var{h}, @var{u}, 
+## @var{v} values, prints them to a file. 
+## All values have to be given in 
+## FullSWOF_2D format (compare function @code{dataconvert}).
 ##
-## If no values for @var{hh}, @var{uu}, @var{vv} are given, 
+## If no values for @var{h}, @var{u}, @var{v} are given, 
 ## then those are set to zero.
 ##
 ## If no @var{filename} is given, then the values are printed 
-## to a file named @asis{'huv_init.dat'}.
+## to a file named @code{huv_init.dat}.
 ##
-## @seealso{topo2file}
+## @seealso{dataconvert, topo2file}
 ## @end defun
 
 function huv2file (x, y, h=[], u=[], v=[], fname='huv_init.dat')
