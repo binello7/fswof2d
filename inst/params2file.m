@@ -29,7 +29,7 @@
 ## 250
 ## @item "yCells"
 ## 140
-## @item "SimTime"
+## @item "SimDuration"
 ## 150
 ## @item "SavedTimes"
 ## 50
@@ -149,7 +149,7 @@ function p = params2file (varargin)
   translate = struct (
   "xCells", {'Nxcell', '%d'}, ...
   "yCells", {'Nycell', '%d'}, ...
-  "SimTime", {'T', '%d'}, ...
+  "SimDuration", {'T', '%d'}, ...
   "SavedTimes", {'nbtimes', '%d'}, ...
   "SchemeType", {'scheme_type', '%d'}, ...
   "TimeStep", {'dtfix', '%f'}, ...
@@ -242,7 +242,7 @@ function p = params2file (varargin)
   parser.addParamValue ("xCells", 250);  # nodes in x-direction
   parser.addParamValue ("yCells", 140);   # nodes in y-direction
 
-  parser.addParamValue ("SimTime", 150);    # time duration of simulation [s]
+  parser.addParamValue ("SimDuration", 150);    # time duration of simulation [s]
   parser.addParamValue ("SavedTimes", 50);  # number of times saved
   parser.addParamValue ("SchemeType", 1);   # 1=fixed cfl, 2=fixed dt
   parser.addParamValue ("TimeStep", 0.01);  # timestep [s]
