@@ -19,12 +19,14 @@
 
 
 ## -*- texinfo -*-
-## @defun {@var{params} =} params2file (@var{PROP}, @var{VAL})
-## Create the FullSWOF_2D compatible input file @code{parameters.txt}.
+## @defun {@var{params} =} params2file (@var{paramsfile}, @var{filename}, @var{PROP}, @var{VAL})
+## Generate the FullSWOF_2D compatible input file @code{parameters.txt}.
 ##
 ## @strong{Properties}:
 ##
 ## @table @asis
+## @item "ParamsFile"
+## ' '
 ## @item "xCells"
 ## 250
 ## @item "yCells"
