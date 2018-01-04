@@ -61,6 +61,7 @@ endif
 az = 70;
 el = 45;
 
+t_str = @(t) sprintf ("t = %d s", t);
 figure(1,"position",get(0,"screensize"))
 ZZ = HZ_evl - Z;
 ZZ(ZZ==0) = NA;
@@ -68,11 +69,13 @@ ZZ = ZZ + Z;
 view (az, el);
 g3 = surf (X, Y, ZZ(:,:,1), 'edgecolor', 'none');
 shading interp
+colormap(ocean(64));
+#colormap jet
+colorbar
+t1 = text (2, -20, 0, t_str (1));
 hold on
 mesh (X, Y, Z, 'facecolor', 'w','edgecolor','k');
 hold off
-#colormap jet
-colormap(ocean(64));
 #axis ([min(X(:)) max(X(:)) min(Y(:)) max(Y(:)) min(Z(:)) max(Z(:))])
 #axis square
 axis equal
@@ -88,7 +91,8 @@ if sv
 endif
 
 for t = 2:tsteps
-  set(g3, 'zdata', ZZ(:,:,t));
+  set (g3, 'zdata', ZZ(:,:,t));
+  set (t1, 'string', t_str (t));
   pause(0.5);
   if sv
     #saves each frame if 'sv' is active
@@ -103,6 +107,10 @@ if sv
   bidon=input ('Frames created ; press <enter> to start assembling');
   disp ('Video assembled, folder ''frames'' can be erased!')
 endif
+
+h_crest = mean (HZ_evl(1,:,end) - Z(1,:));
+
+
 
 
 
