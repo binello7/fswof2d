@@ -24,6 +24,17 @@ pkg load linear-algebra
 dataFolder  = 'data';
 studyName   = 'Channelweir';
 
+## Study variable
+# These are the variables that we will change in this study
+nQ        = 15;
+Qin       = linspace (-0.3, -3, nQ);
+# Order to explore extremes
+tmp = zeros (1,nQ);
+tmp(1:2:end) = Qin(1:ceil(end/2));
+tmp(2:2:end) = fliplr (Qin)(1:ceil(end/2)-1);
+Qin = tmp;
+clear tmp
+
 ## Generate the topography
 #  First the cross-section shape, which will be a "rectangle" 2.5 m wide
 
@@ -60,7 +71,8 @@ HH(:,1) = HH(:,end) = 0;
 HZ = ZZ + HH;
 
 #  Generate weir at the end of the channel
-ZZ(1,:) = 1;
+wh = 1;
+ZZ(1,:) = wh;
 
 surf (XX, YY, ZZ, 'facecolor', 'k');
 hold on
@@ -76,10 +88,6 @@ if !exist (inputsFolder, 'dir')
   mkdir (inputsFolder);
 endif
 
-if !exist (outputsFolder, 'dir')
-    mkdir (outputsFolder);
-  endif
-  
 fname         = @(s) fullfile (inputsFolder, s);
 
 #  Convert the data to the FullSWOF_2D format
@@ -91,6 +99,12 @@ topo2file (X, Y, Z, fname ('topography.dat'));
 #  Write the initial conditions to the file
 huv2file (X, Y, H, U, V, fname ('huv_init.dat'));
 
+# Save the experiment discharge values
+save (fname ('Qin_values.dat'), 'Qin');
+
+# Save variables for reuse in reading outputs
+save (fname ('variables.dat'), studyFolder, inputsFolder, outputsFolder);
+
 #  Write the simulation parameters to a file
 sim_duration    = 100;
 saved_timesteps = 100;
@@ -98,21 +112,51 @@ top_boundary    = 5;
 top_Q           = -0.3;
 top_h           = 1;
 bot_boundary    = 3;
-params2file ('xCells', Nx, 'yCells', Ny, 'xLength', B, ...
-            'yLength', Ly, 'SimTime', sim_duration, ...
+p = params2file ('xCells', Nx, 'yCells', Ny, 'xLength', B, ...
+            'yLength', Ly, 'SimDuration', sim_duration, ...
             'SavedTimes', saved_timesteps, 'BotBoundCond', bot_boundary, ...
             'TopBoundCond', top_boundary, 'TopImposedQ', top_Q, ...
-            'TopimposedH', top_h, 'ParamsFile', fname ('parameters.txt'));
+            'TopimposedH', top_h);
 
+ns = floor (log10 (nQ)) + 1;
+suffix_fmt = sprintf ("_%%0%dd", ns);
 
+for i=1:nQ
+  # update Q
+  p.TopImposedQ = Qin(i);
+  # update output suffix
+  suffix               = sprintf (suffix_fmt, i);
+  p.OutputsSuffix = suffix;
+  # update filename
+  pfile             = fname (sprintf ("parameters%s.txt", suffix));
+  p.ParamsFile = pfile;
 
+  printf ("Writing file %s\n", pfile); fflush (stdout);
+  params2file (p);
 
+  outputsFolder = fullfile (studyFolder, sprintf("Outputs%s", suffix));
+  if !exist (outputsFolder, 'dir')
+    mkdir (outputsFolder);
+  endif
+endfor
 
+## Write bash script to run study
+bfile = fullfile (studyFolder, "run.sh");
+printf ("Writing Bash script to file %s\n", bfile); fflush (stdout);
+timetxt = strftime ("%Y-%m-%d %H:%M:%S", localtime (time ()));
+bsh = {
+'#!/bin/bash', ...
+sprintf("## Automatically generated on %s\n", timetxt), ...
+sprintf("for i in {1..%d}; do", nQ), ...
+sprintf("  id=`printf %s $i`", suffix_fmt), ...
+'  nohup fswof2d -f parameters$id.txt &', ...
+'  if(( ($i % $(nproc)) == 0)); then wait; fi', ...
+'done'
+};
+bsh = strjoin (bsh, "\n");
+fid = fopen (bfile, "wt");
+fputs (fid, bsh);
+fclose (fid);
 
-
-
-
-
-
-
+# save variables.dat X Y Z Nx Ny sim_duration studyFolder inputsFolder outputsFolder
 
