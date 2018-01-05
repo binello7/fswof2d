@@ -31,8 +31,8 @@
 ## If no values for @var{h}, @var{u}, @var{v} are given, 
 ## then those are set to zero.
 ##
-## If no @var{filename} is given, then the values are printed 
-## to a file named @code{huv_init.dat}.
+## If no @var{filename} is given, then the standard file name 
+## @code{huv_init.dat} is used.
 ##
 ## @seealso{dataconvert, topo2file}
 ## @end defun
