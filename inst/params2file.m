@@ -33,7 +33,7 @@
 ## 140
 ## @item "SimDuration"
 ## 150
-## @item "SavedTimes"
+## @item "SavedStates"
 ## 50
 ## @item "SchemeType"
 ## 1
@@ -69,13 +69,13 @@
 ## 0.0005
 ## @item "TopImposedH"
 ## 0.005
-## @item "FrictInit"
+## @item "FrictionInit"
 ## 2, 1=file, 2=const_coef
-## @item "FrictLaw"
+## @item "FrictionLaw"
 ## 1, 0=no Friction, 1=Manning, 2=Darcy-Weisbach, 3=laminar
-## @item "FrictFile"
+## @item "FrictionFile"
 ## 'friction_init.dat'
-## @item "FrictCoef"
+## @item "FrictionCoef"
 ## 0.03
 ## @item "NumFlux"
 ## 5, 1=Rusanov, 2=HLL, 3=HLL2, 4=HLLC, 5=HLLC2
@@ -89,7 +89,7 @@
 ## 0.9, Between 0 and 1
 ## @item "Limiter"
 ## 1, 1=Minmod 2=VanAlbada 3=VanLeer
-## @item "InfModel"
+## @item "InfiltrationModel"
 ## 0, 0=no Infiltration, 1=Green-Ampt
 ## @item "CrustThickness"
 ## 2
@@ -109,23 +109,23 @@
 ## 1.8e-6
 ## @item "HydrCondSoilFile"
 ## 'soil_hydr_cond.dat'
-## @item "WaterContInit"
+## @item "WaterContentInit"
 ## 2, 1=file 2=const_coef
-## @item "WaterContCoef"
+## @item "WaterContentCoef"
 ## 0.254
-## @item "WaterContFile"
+## @item "WaterContentFile"
 ## water_cont.dat
-## @item "PsiInit"
+## @item "WetFrontSuccHeadInit"
 ## 2, 1=file 2=const_coef
-## @item "PsiCoef"
+## @item "WetFrontSuccHeadCoef"
 ## 0.167
-## @item "PsiFile"
+## @item "WetFrontSuccHeadFile"
 ## 'psi.dat'
-## @item "MaxInfRateInit"
+## @item "MaxInfiltrationRateInit"
 ## 2, 1=file 2=const_coef
-## @item "MaxInfRateCoef"
+## @item "MaxInfiltrationRateCoef"
 ## 1.7e-4
-## @item "MaxInfRateFile"
+## @item "MaxInfiltrationRateFile"
 ## 'max_inf.dat'
 ## @item "TopographyInit"
 ## 1, 1=file, 2=flat, 3=Thacker
@@ -141,7 +141,7 @@
 ## 'rain.dat'
 ## @item "OutputsSuffix"
 ## ' '
-## @item "OutputFormat"
+## @item "OutputsFormat"
 ## 1, 1=gnuplot, 2=vtk
 ## @end table
 ## @end defun
@@ -152,7 +152,7 @@ function p = params2file (varargin)
   "xCells", {'Nxcell', '%d'}, ...
   "yCells", {'Nycell', '%d'}, ...
   "SimDuration", {'T', '%d'}, ...
-  "SavedTimes", {'nbtimes', '%d'}, ...
+  "SavedStates", {'nbtimes', '%d'}, ...
   "SchemeType", {'scheme_type', '%d'}, ...
   "TimeStep", {'dtfix', '%f'}, ...
   "CFLval", {'cflfix', '%f'}, ...
@@ -175,10 +175,10 @@ function p = params2file (varargin)
   "TopImposedQ", {'top_imp_discharge', '%f'}, ...
   "TopImposedH", {'top_imp_h', '%f'}, ...
 
-  "FrictInit", {'fric_init', '%d'}, ...
-  "FrictLaw", {'fric', '%d'}, ...
-  "FrictFile", {'fric_NF', '%s'}, ...
-  "FrictCoef", {'friccoef', '%f'}, ...
+  "FrictionInit", {'fric_init', '%d'}, ...
+  "FrictionLaw", {'fric', '%d'}, ...
+  "FrictionFile", {'fric_NF', '%s'}, ...
+  "FrictionCoef", {'friccoef', '%f'}, ...
 
   "NumFlux", {'flux', '%d'}, ...
   "SchemeOrder", {'order', '%d'}, ...
@@ -187,7 +187,7 @@ function p = params2file (varargin)
   "ModifENO", {'modifENO', '%f'}, ...
   "Limiter", {'lim', '%d'}, ...
 
-  "InfModel", {'inf', '%d'}, ...
+  "InfiltrationModel", {'inf', '%d'}, ...
   "CrustThickness", {'zcrust_init', '%d'}, ...
   "CrustCoef", {'zcrustcoef', '%f'}, ...
   "CrustFile", {'zcrust_NF', '%s'}, ...
@@ -200,17 +200,17 @@ function p = params2file (varargin)
   "HydrCondSoilCoef", {'Kscoef', '%g'}, ...
   "HydrCondSoilFile", {'Ks_NF', '%s'}, ...
 
-  "WaterContInit", {'dtheta_init', '%d'}, ...
-  "WaterContCoef", {'dthetacoef', '%f'}, ...
-  "WaterContFile", {'dtheta_NF', '%s'}, ...
+  "WaterContentInit", {'dtheta_init', '%d'}, ...
+  "WaterContentCoef", {'dthetacoef', '%f'}, ...
+  "WaterContentFile", {'dtheta_NF', '%s'}, ...
 
-  "PsiInit", {'Psi_init', '%d'}, ...
-  "PsiCoef", {'Psicoef', '%f'}, ...
-  "PsiFile", {'Psi_NF', '%s'}, ...
+  "WetFrontSuccHeadInit", {'Psi_init', '%d'}, ...
+  "WetFrontSuccHeadCoef", {'Psicoef', '%f'}, ...
+  "WetFrontSuccHeadFile", {'Psi_NF', '%s'}, ...
 
-  "MaxInfRateInit", {'imax_init', '%d'}, ...
-  "MaxInfRateCoef", {'imaxcoef', '%g'}, ...
-  "MaxInfRateFile", {'imax_NF', '%s'}, ...
+  "MaxInfiltrationRateInit", {'imax_init', '%d'}, ...
+  "MaxInfiltrationRateCoef", {'imaxcoef', '%g'}, ...
+  "MaxInfiltrationRateFile", {'imax_NF', '%s'}, ...
 
   "TopographyInit", {'topo', '%d'}, ...
   "TopographyFile", {'topo_NF', '%s'}, ...
@@ -222,7 +222,7 @@ function p = params2file (varargin)
   "RainFile", {'rain_NF', '%s'}, ...
 
   "OutputsSuffix", {'suffix_o', '%s'}, ...
-  "OutputFormat", {'output_f', '%d'}
+  "OutputsFormat", {'output_f', '%d'}
   );
 
   ### If there is only one input argument it should be a structure
@@ -241,11 +241,11 @@ function p = params2file (varargin)
   parser.addParamValue ("ParamsFile", []); # name of the generated  parameters
                                            # file. If empty, do not write file.
 
-  parser.addParamValue ("xCells", 250);  # nodes in x-direction
-  parser.addParamValue ("yCells", 140);   # nodes in y-direction
+  parser.addParamValue ("xCells", 250);   # cells in x-direction
+  parser.addParamValue ("yCells", 140);   # cells in y-direction
 
   parser.addParamValue ("SimDuration", 150);    # time duration of simulation [s]
-  parser.addParamValue ("SavedTimes", 50);  # number of times saved
+  parser.addParamValue ("SavedStates", 50);  # number of times saved
   parser.addParamValue ("SchemeType", 1);   # 1=fixed cfl, 2=fixed dt
   parser.addParamValue ("TimeStep", 0.01);  # timestep [s]
   parser.addParamValue ("CFLval", 0.4);     # cfl-value
@@ -272,11 +272,11 @@ function p = params2file (varargin)
   parser.addParamValue ("TopImposedQ", 0.0005);# imposed discharge at ymax [m3/s]
   parser.addParamValue ("TopImposedH", 0.005); # imposed water height at ymax [m]
 
-  parser.addParamValue ("FrictInit", 2); # 1=file, 2=const_coef
-  parser.addParamValue ("FrictLaw", 1);  # 0=No Friction, 1=Manning,
+  parser.addParamValue ("FrictionInit", 2); # 1=file, 2=const_coef
+  parser.addParamValue ("FrictionLaw", 1);  # 0=No Friction, 1=Manning,
                                          # 2=Darcy-Weisbach, 3=laminar
-  parser.addParamValue ("FrictFile", 'friction_init.dat'); # friction file
-  parser.addParamValue ("FrictCoef", 0.03); # friction coefficient
+  parser.addParamValue ("FrictionFile", 'friction_init.dat'); # friction file
+  parser.addParamValue ("FrictionCoef", 0.03); # friction coefficient
 
   parser.addParamValue ("NumFlux", 5); # 1=Rusanov, 2=HLL, 3=HLL2, 4=HLLC, 5=HLLC2
   parser.addParamValue ("SchemeOrder", 2); # 1=order1, 2=order2
@@ -285,7 +285,8 @@ function p = params2file (varargin)
   parser.addParamValue ("ModifENO", 0.9);  # Between 0 and 1
   parser.addParamValue ("Limiter", 1);     # 1=Minmod 2=VanAlbada 3=VanLeer
 
-  parser.addParamValue ("InfModel", 0);       # 0=No Infiltration, 1=Green-Ampt
+  parser.addParamValue ("InfiltrationModel", 0);       # 0=No Infiltration, 
+                                                       # 1=Green-Ampt
   parser.addParamValue ("CrustThickness", 2); # thickness of the crust [m]
   parser.addParamValue ("CrustCoef", 1);      # crust coefficient
   parser.addParamValue ("CrustFile", 'crust.dat'); # crust file name
@@ -298,17 +299,17 @@ function p = params2file (varargin)
   parser.addParamValue ("HydrCondSoilCoef", 1.8e-6);
   parser.addParamValue ("HydrCondSoilFile", 'soil_hydr_cond.dat'); # hydro cond soil file
 
-  parser.addParamValue ("WaterContInit", 2); # 1=file 2=const_coef
-  parser.addParamValue ("WaterContCoef", 0.254); # water content coefficient
-  parser.addParamValue ("WaterContFile", 'water_cont.dat'); # water cont file
+  parser.addParamValue ("WaterContentInit", 2); # 1=file 2=const_coef
+  parser.addParamValue ("WaterContentCoef", 0.254); # water content coefficient
+  parser.addParamValue ("WaterContentFile", 'water_cont.dat'); # water cont file
 
-  parser.addParamValue ("PsiInit", 2);          # 1=file 2=const_coef
-  parser.addParamValue ("PsiCoef", 0.167);      # psi coefficient
-  parser.addParamValue ("PsiFile", 'psi.dat');  # psi file name
+  parser.addParamValue ("WetFrontSuccHeadInit", 2);       # 1=file 2=const_coef
+  parser.addParamValue ("WetFrontSuccHeadCoef", 0.167);   # psi coefficient
+  parser.addParamValue ("WetFrontSuccFile", 'psi.dat');   # psi file name
 
-  parser.addParamValue ("MaxInfRateInit", 2);       # 1=file 2=const_coef
-  parser.addParamValue ("MaxInfRateCoef", 1.7e-4);  # max inf rate coefficient
-  parser.addParamValue ("MaxInfRateFile", 'max_inf.dat'); # max inf rate file
+  parser.addParamValue ("MaxInfiltrationRateInit", 2);       # 1=file 2=const_coef
+  parser.addParamValue ("MaxInfiltrationRateCoef", 1.7e-4);  # max inf rate coefficient
+  parser.addParamValue ("MaxInfiltrationRateFile", 'max_inf.dat'); # max inf rate file
 
   parser.addParamValue ("TopographyInit", 1); # 1=file, 2=flat, 3=Thacker
   parser.addParamValue ("TopographyFile", 'topography.dat'); # topography file
@@ -321,7 +322,7 @@ function p = params2file (varargin)
   parser.addParamValue ("RainFile", 'rain.dat'); # rain file
 
   parser.addParamValue ("OutputsSuffix", ''); # suffix for "Outputs" folder
-  parser.addParamValue ("OutputFormat", 1);   # 1=gnuplot, 2=vtk
+  parser.addParamValue ("OutputsFormat", 1);   # 1=gnuplot, 2=vtk
 
   parser.parse (varargin{:});
   p = parser.Results;
