@@ -40,6 +40,7 @@ function x = center2node (cx, x0)
     cr = cx(i+1:end);
     xl = center2node (cl, x0);
     xr = center2node (cr, x0);
+    xr(1) = [];
     x  = [xl; xr];
 
   else
