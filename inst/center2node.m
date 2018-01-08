@@ -1,4 +1,5 @@
 ## Copyright (C) 2017 Juan Pablo Carbajal
+## Copyright (C) 2018 Sebastiano Rusca
 ##
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -17,9 +18,11 @@
 ## Created: 2017-12-22
 
 ## -*- texinfo -*-
-## @defun {@var{} =} center2node (@var{}, @var{})
-## 
-## @seealso{}
+## @defun {@var{x} =} center2node (@var{xc}, @var{x0})
+## Return mesh nodes values
+##
+## WRITE MAIN DESCRIPTION HERE
+## @seealso{node2center}
 ## @end defun
 
 function x = center2node (cx, x0)
