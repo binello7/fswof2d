@@ -26,8 +26,8 @@ studyName   = 'Channelweir';
 
 ## Study variable
 # These are the variables that we will change in this study
-nQ        = 15;
-Qin       = linspace (-0.3, -3, nQ);
+nQ        = 26;
+Qin       = linspace (-0.25, -5, nQ);
 # Order to explore extremes
 tmp = zeros (1,nQ);
 tmp(1:2:end) = Qin(1:ceil(end/2));
