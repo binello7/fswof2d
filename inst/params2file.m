@@ -303,9 +303,9 @@ function p = params2file (varargin)
   parser.addParamValue ("WaterContentCoef", 0.254); # water content coefficient
   parser.addParamValue ("WaterContentFile", 'water_cont.dat'); # water cont file
 
-  parser.addParamValue ("WetFrontSuccHeadInit", 2);       # 1=file 2=const_coef
-  parser.addParamValue ("WetFrontSuccHeadCoef", 0.167);   # psi coefficient
-  parser.addParamValue ("WetFrontSuccFile", 'psi.dat');   # psi file name
+  parser.addParamValue ("WetFrontSuccHeadInit", 2);         # 1=file 2=const_coef
+  parser.addParamValue ("WetFrontSuccHeadCoef", 0.167);     # psi coefficient
+  parser.addParamValue ("WetFrontSuccHeadFile", 'psi.dat'); # psi file name
 
   parser.addParamValue ("MaxInfiltrationRateInit", 2);       # 1=file 2=const_coef
   parser.addParamValue ("MaxInfiltrationRateCoef", 1.7e-4);  # max inf rate coefficient
