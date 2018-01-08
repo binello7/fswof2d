@@ -24,16 +24,18 @@ if ~exist ('HZ_evl', 'var')
   #
   dataFolder  = "data";
   studyName   = "Channelweir";
+  suffix      = 2;
+  fsuf = @(s, n) strcat (s, sprintf ('_%02d', n));
 
   ## Read outputs from files
   #
-  outputsFolder = fullfile (dataFolder, studyName, 'Outputs');
+  outputsFolder = fullfile (dataFolder, studyName, fsuf ('Outputs', suffix));
   fname         = @(s) fullfile (outputsFolder, s);
 
   data_init  = load (fname ('huz_initial.dat'));
   data_evl  = load (fname ('huz_evolution.dat'));
 
-  paramsfile = fullfile (dataFolder, studyName, 'Inputs', 'parameters.txt');
+  paramsfile = fullfile (dataFolder, studyName, 'Inputs', strcat (fsuf ('parameters', suffix), '.txt'));
   params = read_params (paramsfile);
 
   ## Get topography and final state free surface
@@ -53,8 +55,10 @@ if ~exist ('HZ_evl', 'var')
     idx_2 = t * Nx * Ny;
     span = idx_1:idx_2;
 
-    hz_evl(:,t)  = data_evl(span,6);
-    HZ_evl(:,:,t)  = dataconvert ('octave', [Nx Ny], hz_evl(:,t));
+    hz_evl(:,t)     = data_evl(span,6);
+    fr_evl(:,t)     = data_evl(span,9);
+    HZ_evl(:,:,t)   = dataconvert ('octave', [Nx Ny], hz_evl(:,t));
+    Fr_evl(:,:,t)   = dataconvert ('octave', [Nx Ny], fr_evl(:,t));
   endfor
 endif
 
