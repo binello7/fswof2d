@@ -22,7 +22,7 @@ close all
 if ~exist ('HZ_evl', 'var')
   ## Global parameters
   #
-  suff        = 3;
+  suff        = 2;
   dataFolder  = "data";
   studyName   = "ChannelVarQ_2";
   outputsName = sprintf ("Outputs_%02d", suff);
@@ -83,7 +83,7 @@ ZZ = HZ_evl;
 #ZZ(ZZ==0) = NA;
 #ZZ = ZZ + Z;
 view (az, el);
-g3 = surf (X, Y, ZZ(:,:,1), 'edgecolor', 'none');
+g3 = mesh (X, Y, ZZ(:,:,1), 'edgecolor', 'none');
 shading interp
 hold on
 mesh (X, Y, Z, 'facecolor', 'w','edgecolor','k');
@@ -92,6 +92,7 @@ hold off
 colormap(ocean(64));
 axis ([min(X(:)) max(X(:)) min(Y(:)) max(Y(:)) min(Z(:)) max(Z(:))])
 #axis square
+#axis equal;
 grid on;
 
 sv = false;
