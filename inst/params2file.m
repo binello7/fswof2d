@@ -25,7 +25,7 @@
 ## @strong{Properties}:
 ##
 ## @table @asis
-## @item "ParamsFile"
+## @item "ParametersFile"
 ## ' '
 ## @item "xCells"
 ## 250
@@ -238,7 +238,7 @@ function p = params2file (varargin)
   parser.FunctionName = 'params2file';
   #TODO
   #checker = ...
-  parser.addParamValue ("ParamsFile", []); # name of the generated  parameters
+  parser.addParamValue ("ParametersFile", []); # name of the generated  parameters
                                            # file. If empty, do not write file.
 
   parser.addParamValue ("xCells", 250);   # cells in x-direction
@@ -327,8 +327,8 @@ function p = params2file (varargin)
   parser.parse (varargin{:});
   p = parser.Results;
 
-  if !isempty (p.ParamsFile)
-    fid = fopen (p.ParamsFile, 'w');
+  if !isempty (p.ParametersFile)
+    fid = fopen (p.ParametersFile, 'w');
     fmt = ' <%s>:: %s\n';
     fname = fieldnames (translate);
 
@@ -352,7 +352,7 @@ function p = params2file (varargin)
     fclose (fid);
   else
     warning ('Octave:fswof2d:params2file:no-file-generated', ...
-   "No parameters file was generated, to do it set the option 'ParamsFile'.\n");
+   "No parameters file was generated, to do it set the option 'ParametersFile'.\n");
   endif
 
 endfunction
