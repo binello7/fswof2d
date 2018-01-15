@@ -26,7 +26,7 @@ close all
 ## Global parameters
 #
 dataFolder  = 'data';
-studyName   = 'ChannelMiddleWeir_meshstudy';
+studyName   = 'ChannelMiddleWeir_meshstudy_2';
 
 ## Generate needed folders for FullSWOF_2D
 studyFolder   = fullfile (dataFolder, studyName);
