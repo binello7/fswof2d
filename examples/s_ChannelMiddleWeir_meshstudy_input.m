@@ -4,7 +4,7 @@
 ## under the terms of the GNU General Public License as published by
 ## the Free Software Foundation; either version 3 of the License, or
 ## (at your option) any later version.
-##
+##g
 ## This program is distributed in the hope that it will be useful,
 ## but WITHOUT ANY WARRANTY; without even the implied warranty of
 ## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -19,6 +19,9 @@
 pkg load fswof2d
 pkg load linear-algebra
 close all
+
+
+
 
 ## Global parameters
 #
@@ -37,10 +40,17 @@ endif
 
 
 ## Parameters that don't change in the loop
-nExp = 5;     # how many experiments we run
+nExp = 4;     # how many experiments we run
 B = 4;
 Ly = 40;     # length of the channel, same for all experiments
 alpha = -5; # slope of the channel
+
+## Define the shape of the weir
+#
+weir_height = 3;
+pweir  = interp1 ([0 16 17 20 21 40], [0 0 weir_height weir_height 0 0], 'pp');
+hwater = interp1 ([0 20 21 40], [0 0 weir_height weir_height], 'pp');
+
 
 # write the alpha-rotation matrix
 rx_alpha = rotv ([1 0 0], deg2rad (alpha));
@@ -49,32 +59,28 @@ np = rx_alpha * [0 0 1].';
 for i = 1:nExp
   ## Generate the parameters varying from one experiment to the other
   # the number of grid cells is doubled from one experiment to the other
-  Ny = 50 * 2^(i-1); # number of grid cells in longitudinal direction
-  Nx = 5 * 2^(i-1);  # number of grid cells in lateral direction
+  Ny = 100 * 2^(i-1); # number of grid cells in longitudinal direction
+  Nx = 10 * 2^(i-1);  # number of grid cells in lateral direction
 
+  # Generate nodes vectors
   x = linspace (0, B, Nx+1);
   xc = node2center (x);
   y = linspace (0, Ly, Ny+1);
-  z = zeros (1, Nx);
-  z(1) = z(end) = 8;
   yc = node2center (y);
-  [XX YY ZZc] = extrude_csec (xc, yc, z);
 
-  # rotate the cross-section by the chosen slope value alpha
-  ZZp = -(np(1)*XX + np(2)*YY) / np(3);
-  ZZ = ZZp + ZZc;
+  # Generate nodes meshes
+  [XX YY] = meshgrid (xc, yc);
 
-  # generate weir at some point of the channel with height wh
-  wh  = 1;
-  pos = 16; # location of weir, in m from the bottom
-  idx_pos = pos * Ny / Ly;
-  ZZ(idx_pos,2:end-1) += wh;
+  # Generate the weir topography
+  zc = (ppval (pweir, yc)).';
+  ZZ = repmat (zc, 1, Nx);
+
 
   ## Generate initial conditions for h, depending on weir position
-  HH = zeros (Ny, Nx);
-  # set the water height equal to the weir height
-  HH(idx_pos+1:end,2:end-1) = wh;
-  # derive the free surface
+  hc = (ppval (hwater, yc)).';
+  HH = repmat (hc, 1, Nx);
+
+  # generate the free surface
   HZ = ZZ + HH;
 
   # u and v can be set to 0
@@ -135,11 +141,13 @@ timetxt = strftime ("%Y-%m-%d %H:%M:%S", localtime (time ()));
 bsh = {
 '#!/bin/bash', ...
 sprintf("## Automatically generated on %s\n", timetxt), ...
+'echo Started on $(date)', ...
 sprintf("for i in {1..%d}; do", nExp), ...
 sprintf("  id=`printf %%02d $i`"), ...
 '  nohup fswof2d -f parameters_$id.dat &', ...
 '  if(( ($i % $(nproc)) == 0)); then wait; fi', ...
-'done'
+'done', ...
+'echo Finished on $(date)'
 };
 bsh = strjoin (bsh, "\n");
 fid = fopen (bfile, "wt");
@@ -147,7 +155,7 @@ fputs (fid, bsh);
 fclose (fid);
 
 # save global variables
-save(fullfile (studyFolder, 'variables.dat'), 'nExp');
-
+save(fullfile (studyFolder, 'input_variables.dat'), 'nExp', 'wpos', 'weir_height');
+clear all
 
 
