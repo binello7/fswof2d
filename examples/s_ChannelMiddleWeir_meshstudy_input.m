@@ -26,7 +26,7 @@ close all
 ## Global parameters
 #
 dataFolder  = 'data';
-studyName   = 'ChannelMiddleWeir_meshstudy_3';
+studyName   = 'ChannelMiddleWeir_meshstudy_2';
 
 ## Generate needed folders for FullSWOF_2D
 studyFolder   = fullfile (dataFolder, studyName);
@@ -42,8 +42,8 @@ endif
 ## Parameters that don't change in the loop
 B = 4;
 Ly = 40;     # length of the channel, same for all experiments
-Nx = [10 20 40 50 60 70 80];
-Ny = [100 200 400 500 600 700 800];
+Nx = [10 20 40 80];
+Ny = [100 200 400 800];
 nExp = length (Nx);     # how many experiments we run
 #alpha = -5; # slope of the channel
 # write the alpha-rotation matrix
@@ -53,8 +53,10 @@ nExp = length (Nx);     # how many experiments we run
 ## Define the longitudinal profile of the weir and of the free surface
 #
 weir_height = 3;
-pweir  = interp1 ([0 16 17 20 21 40], [0 0 weir_height weir_height 0 0], 'pp');
-hwater = interp1 ([0 20 21 40], [0 0 weir_height weir_height], 'pp');
+wTop_l = 17;
+wTop_r = 20;
+pweir  = interp1 ([0 16 wTop_l wTop_r 21 40], [0 0 weir_height weir_height 0 0], 'pp');
+hwater = interp1 ([0 wTop_r 21 40], [0 0 weir_height weir_height], 'pp');
 
 
 for i = 1:nExp
@@ -115,7 +117,7 @@ for i = 1:nExp
   bot_boundary    = 3;
   out_suff        = sprintf ('_%02d', i);
   paramsfile      = suffname ("parameters", i);
-  p = params2file ('xCells', Nx, 'yCells', Ny, 'xLength', B, ...
+  p = params2file ('xCells', Nx(i), 'yCells', Ny(i), 'xLength', B, ...
               'yLength', Ly, 'SimDuration', sim_duration, ...
               'SavedStates', saved_states, 'BotBoundCond', bot_boundary, ...
               'TopBoundCond', top_boundary, 'TopImposedQ', top_Q, ...
@@ -153,7 +155,7 @@ fputs (fid, bsh);
 fclose (fid);
 
 # save global variables
-save(fullfile (studyFolder, 'input_variables.dat'), 'weir_height');
+save(fullfile (studyFolder, 'input_variables.dat'), 'weir_height', 'wTop_l', 'wTop_r', 'pweir');
 clear all
 
 
