@@ -26,7 +26,7 @@ close all
 ## Global parameters
 #
 dataFolder  = 'data';
-studyName   = 'ChannelMiddleWeir_meshstudy_2';
+studyName   = 'ChannelMiddleWeir_meshstudy_3';
 
 ## Generate needed folders for FullSWOF_2D
 studyFolder   = fullfile (dataFolder, studyName);
@@ -40,32 +40,30 @@ endif
 
 
 ## Parameters that don't change in the loop
-nExp = 4;     # how many experiments we run
 B = 4;
 Ly = 40;     # length of the channel, same for all experiments
-alpha = -5; # slope of the channel
+Nx = [10 20 40 50 60 70 80];
+Ny = [100 200 400 500 600 700 800];
+nExp = length (Nx);     # how many experiments we run
+#alpha = -5; # slope of the channel
+# write the alpha-rotation matrix
+#rx_alpha = rotv ([1 0 0], deg2rad (alpha));
+#np = rx_alpha * [0 0 1].';
 
-## Define the shape of the weir
+## Define the longitudinal profile of the weir and of the free surface
 #
 weir_height = 3;
 pweir  = interp1 ([0 16 17 20 21 40], [0 0 weir_height weir_height 0 0], 'pp');
 hwater = interp1 ([0 20 21 40], [0 0 weir_height weir_height], 'pp');
 
 
-# write the alpha-rotation matrix
-rx_alpha = rotv ([1 0 0], deg2rad (alpha));
-np = rx_alpha * [0 0 1].';
-
 for i = 1:nExp
   ## Generate the parameters varying from one experiment to the other
-  # the number of grid cells is doubled from one experiment to the other
-  Ny = 100 * 2^(i-1); # number of grid cells in longitudinal direction
-  Nx = 10 * 2^(i-1);  # number of grid cells in lateral direction
 
   # Generate nodes vectors
-  x = linspace (0, B, Nx+1);
+  x = linspace (0, B, Nx(i)+1);
   xc = node2center (x);
-  y = linspace (0, Ly, Ny+1);
+  y = linspace (0, Ly, Ny(i)+1);
   yc = node2center (y);
 
   # Generate nodes meshes
@@ -73,19 +71,19 @@ for i = 1:nExp
 
   # Generate the weir topography
   zc = (ppval (pweir, yc)).';
-  ZZ = repmat (zc, 1, Nx);
+  ZZ = repmat (zc, 1, Nx(i));
 
 
   ## Generate initial conditions for h, depending on weir position
   hc = (ppval (hwater, yc)).';
-  HH = repmat (hc, 1, Nx);
+  HH = repmat (hc, 1, Nx(i));
 
   # generate the free surface
   HZ = ZZ + HH;
 
   # u and v can be set to 0
-  UU = zeros (Ny, Nx);
-  VV = zeros (Ny, Nx);
+  UU = zeros (Ny(i), Nx(i));
+  VV = zeros (Ny(i), Nx(i));
 
 
   surf (XX, YY, ZZ);
@@ -155,7 +153,7 @@ fputs (fid, bsh);
 fclose (fid);
 
 # save global variables
-save(fullfile (studyFolder, 'input_variables.dat'), 'nExp', 'wpos', 'weir_height');
+save(fullfile (studyFolder, 'input_variables.dat'), 'weir_height');
 clear all
 
 
