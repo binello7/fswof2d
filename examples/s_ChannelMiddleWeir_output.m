@@ -24,7 +24,7 @@ if ~exist ('HZ_evl', 'var')
   #
   dataFolder  = "data";
   studyName   = "ChannelMiddleWeir";
-  suffix      = 1;
+  suffix      = 2;
   fsuf = @(s, n) strcat (s, sprintf ('_%02d', n));
 
   ## Read outputs from files

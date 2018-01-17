@@ -1,4 +1,4 @@
-## Copyright (C) YYYY Sebastiano Rusca
+## Copyright (C) 2018 Sebastiano Rusca
 ##
 ## This program is free software; you can redistribute it and/or modify it
 ## under the terms of the GNU General Public License as published by

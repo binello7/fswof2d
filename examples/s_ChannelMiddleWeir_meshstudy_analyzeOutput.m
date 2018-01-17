@@ -40,14 +40,14 @@ for i = 1:nExp
   Y{i} = YY{i}(:,1);
   Z{i} = ZZ{i}(:,1);
   H{i} = mean (HH{i}(:, round (end/2), 100:end), 3);
-  H_max{i} = max (H{i});
+  [H_max(i), max_idx(i)] = max (H{i});
   HZ{i} = H{i} + Z{i};
   middleweir_head(i) = interp1 (Y{i}, H{i}, weir_mes_pos);
   dy(i) = Ly / Ny(i);
   leg{i} = sprintf ('dx = dy = %d', dy(i));
 endfor
 
-
+Y_max = (max_idx - 1) .* dy .+ 0.5 * dy;
 
 
 r = dy(1:end-1) ./ dy(2:end);
@@ -60,13 +60,29 @@ GCI = Fs * abs (epsilon) ./ (middleweir_head(2:end) *
       (rc^pc - 1));
 GCI = GCI * 100;
 
+## Generate the plots of the analyzed variables
+# plot 1: water head over the middle of the weir
 figure (1)
-plot (dy, middleweir_head);
+plot (dy, middleweir_head, '-o');
 title ('Convergence study at center of weir')
 xlabel ('dx [m]');
 ylabel ('height over weir [m]')
 
+# plot 2: maximum water head
 figure (2)
+plot (dy, H_max, '-o');
+title ('Convergence study for max water depth')
+xlabel ('dx [m]');
+ylabel ('h_{max} [m]')
+
+# plot 3: distance at which max water head occurs
+figure (3)
+plot (dy, Y_max, '-o');
+title ('Convergence study for max water depth location')
+xlabel ('dx [m]');
+ylabel ('location of h_{max} [m]')
+
+figure (4)
 plot (Y{nExp}, Z{nExp}, 'k', 'linewidth', 2);
 for i = 1:nExp
   hold on;
