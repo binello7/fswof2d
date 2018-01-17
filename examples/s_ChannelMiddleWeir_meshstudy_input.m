@@ -26,7 +26,7 @@ close all
 ## Global parameters
 #
 dataFolder  = 'data';
-studyName   = 'ChannelMiddleWeir_meshstudy_2';
+studyName   = 'ChannelMiddleWeir_meshstudy_3';
 
 ## Generate needed folders for FullSWOF_2D
 studyFolder   = fullfile (dataFolder, studyName);
@@ -42,8 +42,8 @@ endif
 ## Parameters that don't change in the loop
 B = 4;
 Ly = 40;     # length of the channel, same for all experiments
-Nx = [10 20 40 80];
-Ny = [100 200 400 800];
+Nx = [2 3 10 20 40 80 100 110];
+Ny = [20 30 100 200 400 800 1000 1100];
 nExp = length (Nx);     # how many experiments we run
 #alpha = -5; # slope of the channel
 # write the alpha-rotation matrix
@@ -92,8 +92,11 @@ for i = 1:nExp
   hold on
   mesh (XX, YY, HZ, 'facecolor', 'none', 'edgecolor', 'b');
   hold off
-
-  pause (2);
+  axis ([0 B 0 Ly 0 weir_height]);
+  text (3.5, 5, 4.3, sprintf ('Nx = %d', Nx(i)))
+  text (3.5, 5, 4, sprintf ('Ny = %d', Ny(i)))
+  print (gcf, fullfile (studyFolder, ...
+         sprintf ('experiment%02d_set-up.png', i)), '-r300');
 
 
   #  Convert the data to the FullSWOF_2D format
