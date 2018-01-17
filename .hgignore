@@ -1,11 +1,13 @@
 syntax: glob
 
-target/
+
 *terrain.m
 */Inputs/
 */Outputs/
 */Outputs_*/
 */frames/
+*.dat
+*.png
 *.mp4
 *.out
 *.tar.gz
