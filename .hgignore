@@ -6,9 +6,9 @@ syntax: glob
 */Outputs/
 */Outputs_*/
 */frames/
+*/data/*/*.sh
 *.dat
 *.png
 *.mp4
 *.out
 *.tar.gz
-*/data/*/*.sh
