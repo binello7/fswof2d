@@ -18,11 +18,11 @@
 ## Created: 2017-12-11
 
 ## -*- texinfo -*-
-## @defun {[@var{y},@var{z},@var{params},@var{yi},@var{zi}] =} 
+## @defun {[@var{x},@var{z},@var{params},@var{xi},@var{zi}] =} 
 ##              csec_channel2lvlsym (@var{N}, @var{PROP}, @var{VAL})
 ## Generate a two levels trapezoidal cross-section.
 ##
-## The generated cross-section s composed of embankments, floodplains, river 
+## The generated cross-section is composed of embankments, floodplains, river 
 ## banks and riverbed. The length of these elements, as well as the channel and 
 ## embankments height is defined by the user.
 ##
@@ -52,7 +52,7 @@
 ## @seealso{extrude_csec}
 ## @end defun
 
-function [y z p yi zi] = csec_channel2lvlsym (N, varargin)
+function [x z p xi zi] = csec_channel2lvlsym (N, varargin)
   
   ### DEFAULT INIZIALIZATION OF THE FUNCTION ###
   parser = inputParser ();
@@ -71,9 +71,9 @@ function [y z p yi zi] = csec_channel2lvlsym (N, varargin)
   parser.parse (varargin{:});
   p = parser.Results;
 
-  dy  = [0 p.Embankment p.Plain p.RiverBank p.RiverBed/2].';
-  yi  = cumsum (dy);
-  yi  = [yi(1:end-1); yi(end) + cumsum(flipud (dy(2:end)))];
+  dx  = [0 p.Embankment p.Plain p.RiverBank p.RiverBed/2].';
+  xi  = cumsum (dx);
+  xi  = [xi(1:end-1); xi(end) + cumsum(flipud (dx(2:end)))];
 
   dz = [zeros(1,2) p.BankHeight 0 p.EmbankmentHeight].';
   zi = cumsum (dz);
@@ -83,34 +83,34 @@ function [y z p yi zi] = csec_channel2lvlsym (N, varargin)
 
     fname = {"Embankment", "Plain", "RiverBank","RiverBed"};
     nf    = [1:4 3:-1:1];
-    y     = [];
+    x     = [];
     for i = 1:length(nf)
       f   = fname{nf(i)};
       n   = N.(f);
-      tmp = linspace (yi(i), yi(i+1), n + 1).';
-      if isempty(y)
-        y = tmp;
+      tmp = linspace (xi(i), xi(i+1), n + 1).';
+      if isempty(x)
+        x = tmp;
       else
-        y = [y; tmp(2:end)];
+        x = [x; tmp(2:end)];
       endif
     endfor
 
   else
-    y = linspace (0, yi(end), N+1).';
+    x = linspace (0, xi(end), N+1).';
   endif
 
-  z = interp1 (yi, zi, y);
+  z = interp1 (xi, zi, x);
 
 endfunction
 
 %!demo
-%! [y z p yi zi] = csec_channel2lvlsym (140);
-%! plot(y,z,'s-;mesh;',yi,zi,'*;knots;')
+%! [x z p xi zi] = csec_channel2lvlsym (140);
+%! plot(x,z,'s-;mesh;',xi,zi,'*;knots;')
 %! axis tight
 
 %!demo
 %! n = struct("Embankment",20, "Plain",10,"RiverBank",20,"RiverBed",10);
-%! [y z p yi zi] = csec_channel2lvlsym (n);
-%! plot(y,z,'s-;mesh;',yi,zi,'*;knots;')
+%! [x z p xi zi] = csec_channel2lvlsym (n);
+%! plot(x,z,'s-;mesh;',xi,zi,'*;knots;')
 %! axis tight
 
