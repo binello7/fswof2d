@@ -36,7 +36,7 @@
 ## @item "SavedStates"
 ## 50
 ## @item "SchemeType"
-## 1
+## 1, 1=fixed cfl, 2=fixed dt
 ## @item "TimeStep"
 ## 0.01
 ## @item "CFLval"
@@ -98,13 +98,13 @@
 ## @item "CrustFile"
 ## 'crust.dat'
 ## @item "HydrCondCrustInit"
-## 2
+## 2, 1=file, 2=const_coef
 ## @item "HydrCondCrustCoef"
 ## 1.8e-6
 ## @item "HydrCondCrustFile"
 ## 'crust_hydr_cond.dat'
 ## @item "HydrCondSoilInit"
-## 2
+## 2, 1=file, 2=const_coef
 ## @item "HydrCondSoilCoef"
 ## 1.8e-6
 ## @item "HydrCondSoilFile"
