@@ -72,7 +72,7 @@
 ## @item "FrictionInit"
 ## 2, 1=file, 2=const_coef
 ## @item "FrictionLaw"
-## 1, 0=no Friction, 1=Manning, 2=Darcy-Weisbach, 3=laminar
+## 1, 0=no friction, 1=Manning, 2=Darcy-Weisbach, 3=laminar
 ## @item "FrictionFile"
 ## 'friction_init.dat'
 ## @item "FrictionCoef"
@@ -90,12 +90,12 @@
 ## @item "Limiter"
 ## 1, 1=Minmod 2=VanAlbada 3=VanLeer
 ## @item "InfiltrationModel"
-## 0, 0=no Infiltration, 1=Green-Ampt
-## @item "CrustThickness"
-## 2
-## @item "CrustCoef"
+## 0, 0=no infiltration, 1=Green-Ampt
+## @item "CrustThicknessInit"
+## 2, 1=file 2=const_val
+## @item "CrustThicknessVal"
 ## 1
-## @item "CrustFile"
+## @item "CrustThicknessFile"
 ## 'crust.dat'
 ## @item "HydrCondCrustInit"
 ## 2, 1=file, 2=const_coef
@@ -110,20 +110,20 @@
 ## @item "HydrCondSoilFile"
 ## 'soil_hydr_cond.dat'
 ## @item "WaterContentInit"
-## 2, 1=file 2=const_coef
-## @item "WaterContentCoef"
+## 2, 1=file 2=const_val
+## @item "WaterContentVal"
 ## 0.254
 ## @item "WaterContentFile"
 ## water_cont.dat
 ## @item "WetFrontSuccHeadInit"
-## 2, 1=file 2=const_coef
-## @item "WetFrontSuccHeadCoef"
+## 2, 1=file 2=const_val
+## @item "WetFrontSuccHeadVal"
 ## 0.167
 ## @item "WetFrontSuccHeadFile"
 ## 'psi.dat'
 ## @item "MaxInfiltrationRateInit"
-## 2, 1=file 2=const_coef
-## @item "MaxInfiltrationRateCoef"
+## 2, 1=file 2=const_val
+## @item "MaxInfiltrationRateVal"
 ## 1.7e-4
 ## @item "MaxInfiltrationRateFile"
 ## 'max_inf.dat'
@@ -188,9 +188,9 @@ function p = params2file (varargin)
   "Limiter", {'lim', '%d'}, ...
 
   "InfiltrationModel", {'inf', '%d'}, ...
-  "CrustThickness", {'zcrust_init', '%d'}, ...
-  "CrustCoef", {'zcrustcoef', '%f'}, ...
-  "CrustFile", {'zcrust_NF', '%s'}, ...
+  "CrustThicknessInit", {'zcrust_init', '%d'}, ...
+  "CrustThicknessVal", {'zcrustcoef', '%f'}, ...
+  "CrustThicknessFile", {'zcrust_NF', '%s'}, ...
 
   "HydrCondCrustInit", {'Kc_init', '%d'}, ...
   "HydrCondCrustCoef", {'Kccoef', '%g'}, ...
@@ -201,15 +201,15 @@ function p = params2file (varargin)
   "HydrCondSoilFile", {'Ks_NF', '%s'}, ...
 
   "WaterContentInit", {'dtheta_init', '%d'}, ...
-  "WaterContentCoef", {'dthetacoef', '%f'}, ...
+  "WaterContentVal", {'dthetacoef', '%f'}, ...
   "WaterContentFile", {'dtheta_NF', '%s'}, ...
 
   "WetFrontSuccHeadInit", {'Psi_init', '%d'}, ...
-  "WetFrontSuccHeadCoef", {'Psicoef', '%f'}, ...
+  "WetFrontSuccHeadVal", {'Psicoef', '%f'}, ...
   "WetFrontSuccHeadFile", {'Psi_NF', '%s'}, ...
 
   "MaxInfiltrationRateInit", {'imax_init', '%d'}, ...
-  "MaxInfiltrationRateCoef", {'imaxcoef', '%g'}, ...
+  "MaxInfiltrationRateVal", {'imaxcoef', '%g'}, ...
   "MaxInfiltrationRateFile", {'imax_NF', '%s'}, ...
 
   "TopographyInit", {'topo', '%d'}, ...
@@ -287,9 +287,9 @@ function p = params2file (varargin)
 
   parser.addParamValue ("InfiltrationModel", 0);       # 0=No Infiltration, 
                                                        # 1=Green-Ampt
-  parser.addParamValue ("CrustThickness", 2); # thickness of the crust [m]
-  parser.addParamValue ("CrustCoef", 1);      # crust coefficient
-  parser.addParamValue ("CrustFile", 'crust.dat'); # crust file name
+  parser.addParamValue ("CrustThicknessInit", 2);  # 1=file 2=const_val
+  parser.addParamValue ("CrustThicknessVal", 1);   # crust thickness value
+  parser.addParamValue ("CrustThicknessFile", 'crust.dat'); # crust thickness file name
 
   parser.addParamValue ("HydrCondCrustInit", 2); # 1=file, 2=const_coef
   parser.addParamValue ("HydrCondCrustCoef", 1.8e-6);
@@ -299,16 +299,16 @@ function p = params2file (varargin)
   parser.addParamValue ("HydrCondSoilCoef", 1.8e-6);
   parser.addParamValue ("HydrCondSoilFile", 'soil_hydr_cond.dat'); # hydro cond soil file
 
-  parser.addParamValue ("WaterContentInit", 2); # 1=file 2=const_coef
-  parser.addParamValue ("WaterContentCoef", 0.254); # water content coefficient
+  parser.addParamValue ("WaterContentInit", 2); # 1=file 2=const_val
+  parser.addParamValue ("WaterContentVal", 0.254); # water content value
   parser.addParamValue ("WaterContentFile", 'water_cont.dat'); # water cont file
 
-  parser.addParamValue ("WetFrontSuccHeadInit", 2);         # 1=file 2=const_coef
-  parser.addParamValue ("WetFrontSuccHeadCoef", 0.167);     # psi coefficient
+  parser.addParamValue ("WetFrontSuccHeadInit", 2);         # 1=file 2=const_val
+  parser.addParamValue ("WetFrontSuccHeadVal", 0.167);      # psi value
   parser.addParamValue ("WetFrontSuccHeadFile", 'psi.dat'); # psi file name
 
-  parser.addParamValue ("MaxInfiltrationRateInit", 2);       # 1=file 2=const_coef
-  parser.addParamValue ("MaxInfiltrationRateCoef", 1.7e-4);  # max inf rate coefficient
+  parser.addParamValue ("MaxInfiltrationRateInit", 2);       # 1=file 2=const_val
+  parser.addParamValue ("MaxInfiltrationRateVal", 1.7e-4);  # max inf rate value
   parser.addParamValue ("MaxInfiltrationRateFile", 'max_inf.dat'); # max inf rate file
 
   parser.addParamValue ("TopographyInit", 1); # 1=file, 2=flat, 3=Thacker
