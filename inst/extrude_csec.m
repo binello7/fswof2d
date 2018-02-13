@@ -21,8 +21,8 @@
 ## @defunx {[@var{xx} @var{yy} @var{zz}] =} extrude_csec (@dots{})
 ## Given a x-z cross-section profile, extrude it along the specified y-axis.
 ##
-## The given values of the @var{x} vector represents the positions on the x-axis
-## where a cross-section will be copied. The @var{x} values don't 
+## The given values of the @var{y} vector represents the positions on the y-axis
+## where a cross-section will be copied. The @var{y} values don't 
 ## have to be linearly spaced.
 ##
 ## @seealso{csec_channel2lvlsym}
