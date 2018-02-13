@@ -109,11 +109,11 @@
 ## 1.8e-6
 ## @item "HydrCondSoilFile"
 ## 'soil_hydr_cond.dat'
-## @item "WaterContentInit"
+## @item "DeltaWaterContentInit"
 ## 2, 1=file 2=const_val
-## @item "WaterContentVal"
+## @item "DeltaWaterContentVal"
 ## 0.254
-## @item "WaterContentFile"
+## @item "DeltaWaterContentFile"
 ## water_cont.dat
 ## @item "WetFrontSuccHeadInit"
 ## 2, 1=file 2=const_val
@@ -200,9 +200,9 @@ function p = params2file (varargin)
   "HydrCondSoilCoef", {'Kscoef', '%g'}, ...
   "HydrCondSoilFile", {'Ks_NF', '%s'}, ...
 
-  "WaterContentInit", {'dtheta_init', '%d'}, ...
-  "WaterContentVal", {'dthetacoef', '%f'}, ...
-  "WaterContentFile", {'dtheta_NF', '%s'}, ...
+  "DeltaWaterContentInit", {'dtheta_init', '%d'}, ...
+  "DeltaWaterContentVal", {'dthetacoef', '%f'}, ...
+  "DeltaWaterContentFile", {'dtheta_NF', '%s'}, ...
 
   "WetFrontSuccHeadInit", {'Psi_init', '%d'}, ...
   "WetFrontSuccHeadVal", {'Psicoef', '%f'}, ...
@@ -299,9 +299,9 @@ function p = params2file (varargin)
   parser.addParamValue ("HydrCondSoilCoef", 1.8e-6);
   parser.addParamValue ("HydrCondSoilFile", 'soil_hydr_cond.dat'); # hydro cond soil file
 
-  parser.addParamValue ("WaterContentInit", 2); # 1=file 2=const_val
-  parser.addParamValue ("WaterContentVal", 0.254); # water content value
-  parser.addParamValue ("WaterContentFile", 'water_cont.dat'); # water cont file
+  parser.addParamValue ("DeltaWaterContentInit", 2); # 1=file 2=const_val
+  parser.addParamValue ("DeltaWaterContentVal", 0.254); # water content value
+  parser.addParamValue ("DeltaWaterContentFile", 'water_cont.dat'); # water cont file
 
   parser.addParamValue ("WetFrontSuccHeadInit", 2);         # 1=file 2=const_val
   parser.addParamValue ("WetFrontSuccHeadVal", 0.167);      # psi value
