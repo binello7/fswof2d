@@ -19,9 +19,12 @@
 
 ## -*- texinfo -*-
 ## @defun {@var{x} =} center2node (@var{xc}, @var{x0})
-## Return mesh nodes values
+## Convert mesh centers values to corresponding mesh nodes values.
 ##
-## WRITE MAIN DESCRIPTION HERE
+## Given a vector of mesh centers coordinates @var{xc} and any mesh node
+## coordinate @var{x0} return the vector @var{x} of the corresponding mesh
+## nodes coordinates.
+##
 ## @seealso{node2center}
 ## @end defun
 
