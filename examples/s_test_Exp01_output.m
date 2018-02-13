@@ -51,7 +51,10 @@ if ~exist ('hz_fin', 'var')
 
   # Final state free surface
   hz_fin = data_fin(:,6);
+  hz_evl = data_evl(:,6);
+  v_evl  = data_evl(:,5);
   hz_fin = dataconvert ('octave', [Nx Ny], hz_fin);
+  [HZt VVt]  = evolution_matrix (Nx, Ny, 2, hz_evl, v_evl);
 endif
 
 ## Plot topography and final state free surface
