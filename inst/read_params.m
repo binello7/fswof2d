@@ -18,9 +18,18 @@
 ## Created: 2017-12-22
 
 ## -*- texinfo -*-
-## @defun {@var{} =} read_params (@var{}, @var{})
-## 
-## @seealso{}
+## @defun {@var{params} =} read_params (@var{filename})
+## Return a @code{struct} with the simulation parameters and their values.
+##
+## Read the FullSWOF_2D @code{parameters.txt} file and returns a @code{struct}
+## @var{params} containing the names of all the parameters settable and their
+## corresponding value.
+##
+## If @code{parameters.txt} is not stored in the same folder, then
+## @var{filename} has to include the path to the file. @var{filename} is set by
+## default to @code{parameters.txt}.
+##
+## @seealso{params2file}
 ## @end defun
 
 function p = read_params (fname = 'parameters.txt')
