@@ -1,4 +1,5 @@
 ## Copyright (C) 2017 Juan Pablo Carbajal
+## Copyright (C) 2018 Sebastiano Rusca
 ##
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -18,9 +19,12 @@
 
 ## -*- texinfo -*-
 ## @defun {@var{cx} =} node2center (@var{x})
-## Converts nodes to centers.
+## Convert mesh nodes values to corresponding mesh centers values.
 ##
-## @seealso{linspace, meshgrid}
+## Given a vector of mesh nodes coordinates @var{x} return the vector @var{xc}
+## of the corresponding mesh centers coordinates.
+##
+## @seealso{center2node}
 ## @end defun
 
 function cx = node2center (x)
