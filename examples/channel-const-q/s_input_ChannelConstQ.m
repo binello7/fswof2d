@@ -20,22 +20,18 @@
 pkg load fswof2d
 
 ## Global parameters
-#
 dataFolder  = "data";
-studyName   = "Channel_ConstQ";
 
 ## Generate topography
 # Define variables needed for the parametrization of the topography.
-
-##
 # Channel geometry
 Ly    = 250;   # Channel length
 alpha = 10;    # Slope along the length in degrees
 
-##
 # Topography mesh parameters
 Nxcell = 250;
 Nycell = 140;
+
 # mesh nodes
 y             = linspace (0, Ly, Nycell + 1).';
 y             = node2center (y);
@@ -44,10 +40,12 @@ xc            = node2center (x);
 z             = interp1 (x, z, xc);
 x             = xc; clear xc;
 [X Y Zc]      = extrude_csec (x, y, z);
+
 # Define a plane with the given slope
 nf = @(d1,d2) [cosd(d2).*sind(d1) sind(d2).*sind(d1) cosd(d1)];
 np = nf (alpha, 0);
 Zp = (np(1) * Y + np(2) * X ) ./ np(3);
+
 # Total surface
 Z = Zc + Zp;
 
@@ -56,23 +54,24 @@ Z = Zc + Zp;
 
 # The inital conditons is 2 meters of water inside the channel
 zw0 = 2; # free surface at 4 meters
+
 # mask bed of channel
 bd_mask = z < sqrt (eps);
+
 # mask banks of channel
 bk_mask = z < zw0 & !bd_mask;
+
 # mask whole channel
 ch_mask = bd_mask | bk_mask;
 
 zw0          = zw0 * ch_mask;
 h0          = zw0 - z;
 h0(h0 < 0) = 0;
-
 H0 = extrude_csec (x, y, h0);
 U0 = V0 = zeros (size (X));
 
 figure (1)
-clf
-plot_topo (X, Y, Z);
+surf (X, Y, Z);
 hold on
 tmp   = H0; tmp(tmp < sqrt (eps)) = NA;
 lblue = [0.5 0.5 1];
@@ -80,41 +79,40 @@ surf (X, Y, Z+tmp, 'edgecolor',lblue, 'facecolor','b');
 hold off
 
 ## Write out data files
-#
-
 # Convert to FullSWOF_2D format
 data = {X,Y,Z,H0,U0,V0};
 [x_swf y_swf z_swf ...
- h_swf u_swf v_swf] = dataconvert ('fswof2d', data{:});
-# FullSOWF_2D needs an Inputs and Ouput folder, check user manual.
-inputsFolder  = fullfile (dataFolder, studyName, 'Inputs');
-outputsFolder = fullfile (dataFolder, studyName, 'Outputs');
-fname         = @(s) fullfile (inputsFolder, s);
+  h_swf u_swf v_swf] = dataconvert ('fswof2d', data{:});
+
+# FullSOWF_2D needs an Inputs and Ouputs
+inputsFolder  = fullfile (dataFolder, 'Inputs');
+outputsFolder = fullfile (dataFolder, 'Outputs');
 mkdir (inputsFolder);
 mkdir (outputsFolder);
 
-# write out topography
+fname         = @(s) fullfile (inputsFolder, s);
+# write topography
 data = {x_swf, y_swf, z_swf};
 topo2file (data{:}, fname ('topography.dat'));
-# write out IC
+
+# write initial conditions
 data = {x_swf, y_swf, h_swf, u_swf, v_swf};
 huv2file (data{:}, fname ('huv_init.dat'));
 
-## Write out paramters files
-#
+## Write paramters file
 Lx        = (p.Embankment + p.Plain + p.RiverBank) * 2 + p.RiverBed;
 simT      = 150;
 nbT       = 50;
 topbound  = 5;
 Qin       = 10;
 botbound  = 3;
-params2file ("ParamsFile", fname('parameters.txt'), ...
+params2file ("ParametersFile", fname('parameters.txt'), ...
              "xCells", Nxcell, ...
              "yCells", Nycell, ...
              "xLength", Lx, ...
              "yLength", Ly, ...
-             "SimTime", simT, ...
-             "SavedTimes", nbT, ...
+             "SimDuration", simT, ...
+             "SavedStates", nbT, ...
              "TopimposedQ", Qin, ...
              "BotBoundCond", botbound, ...
              "TopBoundCond", topbound);
