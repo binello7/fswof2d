@@ -70,13 +70,15 @@ h0(h0 < 0) = 0;
 H0 = extrude_csec (x, y, h0);
 U0 = V0 = zeros (size (X));
 
-figure (1)
+figure ('visible', 'off');
 surf (X, Y, Z);
 hold on
 tmp   = H0; tmp(tmp < sqrt (eps)) = NA;
 lblue = [0.5 0.5 1];
 surf (X, Y, Z+tmp, 'edgecolor',lblue, 'facecolor','b');
 hold off
+axis normal
+print simulation-setup.png
 
 ## Write out data files
 # Convert to FullSWOF_2D format
