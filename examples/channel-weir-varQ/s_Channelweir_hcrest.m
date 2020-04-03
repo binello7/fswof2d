@@ -60,8 +60,3 @@ for i = 1:nfiles
   ## Get the mean height over the weir
   h_weir(i,1) = mean (HZ_fin(1,:) - Z(1,:));
 endfor
-
-
-
-
-

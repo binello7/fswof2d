@@ -77,7 +77,7 @@ ZZ(pos,2:end-1) += wh;
 HZ = ZZ;
 
 HZ(pos+1:end,2:end-1) = ZZ(pos+1:end,2:end-1) + HH(pos+1:end,2:end-1);
- 
+
 surf (XX, YY, ZZ);
 hold on
 mesh (XX, YY, HZ, 'facecolor', 'none', 'edgecolor', 'b');
@@ -164,4 +164,3 @@ fputs (fid, bsh);
 fclose (fid);
 
 # save variables.dat X Y Z Nx Ny sim_duration studyFolder inputsFolder outputsFolder
-
