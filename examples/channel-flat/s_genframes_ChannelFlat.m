@@ -99,7 +99,7 @@ grid on;
 
 view (az, el);
 
-quality = '-r200'
+quality = '-r200';
 frname = fullfile (framesFolder, sprintf ('frame-%04d.png',1));
 print ('-dpng', quality, frname);
 
