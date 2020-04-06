@@ -1,5 +1,6 @@
 target/
 data/
 examples/channel-bottomweir-varQ/run.sh
+examples/channel-middleweir-varQ/run.sh
 *.png
 *.gif
