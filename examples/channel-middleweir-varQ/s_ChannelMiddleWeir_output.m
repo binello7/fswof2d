@@ -1,34 +1,34 @@
-## Copyright (C) 2017 Sebastiano Rusca
-##
-## This program is free software; you can redistribute it and/or modify
-## it under the terms of the GNU General Public License as published by
-## the Free Software Foundation; either version 3 of the License, or
-## (at your option) any later version.
-##
-## This program is distributed in the hope that it will be useful,
-## but WITHOUT ANY WARRANTY; without even the implied warranty of
-## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-## GNU General Public License for more details.
-##
-## You should have received a copy of the GNU General Public License
-## along with this program. If not, see <http://www.gnu.org/licenses/>.
+%% Copyright (C) 2017 Sebastiano Rusca
+%%
+%% This program is free software; you can redistribute it and/or modify
+%% it under the terms of the GNU General Public License as published by
+%% the Free Software Foundation; either version 3 of the License, or
+%% (at your option) any later version.
+%%
+%% This program is distributed in the hope that it will be useful,
+%% but WITHOUT ANY WARRANTY; without even the implied warranty of
+%% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%% GNU General Public License for more details.
+%%
+%% You should have received a copy of the GNU General Public License
+%% along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-## Author: Sebastiano Rusca
-## Created: 2017-12-11
+%% Author: Sebastiano Rusca
+%% Created: 2017-12-11
 
 pkg load fswof2d
 close all
 
 if ~exist ('HZ_evl', 'var')
-  ## Global parameters
-  #
+  %% Global parameters
+  %
   dataFolder  = "data";
   studyName   = "ChannelMiddleWeir";
   suffix      = 2;
   fsuf = @(s, n) strcat (s, sprintf ('_%02d', n));
 
-  ## Read outputs from files
-  #
+  %% Read outputs from files
+  %
   outputsFolder = fullfile (dataFolder, studyName, fsuf ('Outputs', suffix));
   fname         = @(s) fullfile (outputsFolder, s);
 
@@ -38,13 +38,13 @@ if ~exist ('HZ_evl', 'var')
   paramsfile = fullfile (dataFolder, studyName, 'Inputs', strcat (fsuf ('parameters', suffix), '.txt'));
   params = read_params (paramsfile);
 
-  ## Get topography and final state free surface
-  # Topography in FullSWOF_2D format
+  %% Get topography and final state free surface
+  % Topography in FullSWOF_2D format
   x_swf = data_init(:,1);
   y_swf = data_init(:,2);
   z_swf = data_init(:,7);
 
-  # Convert the data from 'fswof2d' to 'octave'
+  % Convert the data from 'fswof2d' to 'octave'
   Nx = params.Nxcell;
   Ny = params.Nycell;
   [X Y Z] = dataconvert ('octave', [Nx Ny], x_swf, y_swf, z_swf);
@@ -74,19 +74,19 @@ view (az, el);
 g3 = surf (X, Y, ZZ(:,:,1), 'edgecolor', 'none');
 shading interp
 colormap(ocean(64));
-#colormap jet
+%colormap jet
 colorbar
 t1 = text (2, -20, 0, t_str (1));
 hold on
 mesh (X, Y, Z, 'facecolor', 'w','edgecolor','k');
 hold off
-#axis ([min(X(:)) max(X(:)) min(Y(:)) max(Y(:)) min(Z(:)) max(Z(:))])
-#axis square
+%axis ([min(X(:)) max(X(:)) min(Y(:)) max(Y(:)) min(Z(:)) max(Z(:))])
+%axis square
 axis equal
 grid on;
 
 sv = false;
-# Save first frame if 'sv' is active
+% Save first frame if 'sv' is active
 if sv
   framesFolder = fullfile (dataFolder, studyName, 'frames');
   mkdir (framesFolder);
@@ -99,7 +99,7 @@ for t = 2:tsteps
   set (t1, 'string', t_str (t));
   pause(0.5);
   if sv
-    #saves each frame if 'sv' is active
+    %saves each frame if 'sv' is active
     frame = fullfile (framesFolder, sprintf ('frame-%04d.png', t));
     print ('-dpng', '-r300', '-S1920,1080', frame);
   endif
@@ -113,8 +113,3 @@ if sv
 endif
 
 h_crest = mean (HZ_evl(1,:,end) - Z(1,:));
-
-
-
-
-
