@@ -157,4 +157,4 @@ fputs (fid, bsh);
 fclose (fid);
 
 % Make file executable
-system ('chmod +x run.sh')
+system ('chmod +x run.sh');
