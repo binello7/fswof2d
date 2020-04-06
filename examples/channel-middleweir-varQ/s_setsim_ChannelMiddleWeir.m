@@ -35,7 +35,7 @@ Qin = tmp;
 clear tmp
 
 %% Generate the topography
-%  First the cross-section shape, which will be a "rectangle" 2.5 m wide
+%  First the cross-section shape: rectangle 2.5 m wide
 B = 2.5;
 Nx = 50;
 x = linspace (0, B, Nx+1);
@@ -57,37 +57,40 @@ np = rx_alpha * [0 0 1].';
 ZZp = -(np(1)*XX + np(2)*YY) / np(3);
 ZZ = ZZp + ZZc;
 
-%% Generate initial conditions for h, u and v can be set to 0
+%% Generate initial conditions for h. U and v can be set to 0
 HH = ones (Ny, Nx);
 UU = zeros (Ny, Nx);
 VV = zeros (Ny, Nx);
+% HH: water height, relative to channel bottom
 HH(:,1) = HH(:,end) = 0;
 
 
 %  Generate weir at some point of the channel
-wh  = 1;
+wh  = 1; % height of the weir
 pos = 20;
 ZZ(pos,2:end-1) += wh;
+% HZ: free surface of water
 HZ = ZZ;
 
 HZ(pos+1:end,2:end-1) = ZZ(pos+1:end,2:end-1) + HH(pos+1:end,2:end-1);
 
+%% Plot simulation setup
+figure ('visible', 'off')
 surf (XX, YY, ZZ);
 hold on
 mesh (XX, YY, HZ, 'facecolor', 'none', 'edgecolor', 'b');
-%axis equal
 hold off
+print simulation-setup.png
 
 %% Generate needed inputs files and folders for FullSWOF_2D
 %  Generate Folders
-studyFolder   = fullfile (dataFolder, studyName);
-inputsFolder  = fullfile (studyFolder, 'Inputs');
-outputsFolder = fullfile (studyFolder, 'Outputs');
+inputsFolder  = fullfile (dataFolder, 'Inputs');
+outputsFolder = fullfile (dataFolder, 'Outputs');
 if !exist (inputsFolder, 'dir')
   mkdir (inputsFolder);
 endif
 
-fname         = @(s) fullfile (inputsFolder, s);
+fname = @(s) fullfile (inputsFolder, s);
 
 %  Convert the data to the FullSWOF_2D format
 [X Y Z H U V] = dataconvert ('fswof2d', XX, YY, ZZ, HH, UU, VV);
@@ -101,10 +104,7 @@ huv2file (X, Y, H, U, V, fname ('huv_init.dat'));
 % Save the experiment discharge values
 save (fname ('Qin_values.dat'), 'Qin');
 
-% Save variables for reuse in reading outputs
-save (fname ('variables.dat'), studyFolder, inputsFolder, outputsFolder);
-
-%  Write the simulation parameters to a file
+%  Write the simulation parameters to file
 sim_duration    = 100;
 saved_timesteps = 100;
 top_boundary    = 5;
@@ -121,34 +121,37 @@ ns = floor (log10 (nQ)) + 1;
 suffix_fmt = sprintf ("_%%0%dd", ns);
 
 for i=1:nQ
-  % update Q
+  % Update Q
   p.TopImposedQ = Qin(i);
-  % update output suffix
-  suffix               = sprintf (suffix_fmt, i);
+
+  % Update output suffix
+  suffix = sprintf (suffix_fmt, i);
   p.OutputsSuffix = suffix;
-  % update filename
-  pfile             = fname (sprintf ("parameters%s.txt", suffix));
-  p.ParamsFile = pfile;
+
+  % Update filename
+  pfile = fname (sprintf ("parameters%s.txt", suffix));
+  p.ParametersFile = pfile;
 
   printf ("Writing file %s\n", pfile); fflush (stdout);
   params2file (p);
 
-  outputsFolder = fullfile (studyFolder, sprintf("Outputs%s", suffix));
+  outputsFolder = fullfile (dataFolder, sprintf("Outputs%s", suffix));
   if !exist (outputsFolder, 'dir')
     mkdir (outputsFolder);
-  endif
-endfor
+  end%if
+end%for
 
 %% Write bash script to run study
-bfile = fullfile (studyFolder, "run.sh");
+bfile = "run.sh";
 printf ("Writing Bash script to file %s\n", bfile); fflush (stdout);
 timetxt = strftime ("%Y-%m-%d %H:%M:%S", localtime (time ()));
 bsh = {
-'%!/bin/bash', ...
-sprintf("%% Automatically generated on %s\n", timetxt), ...
+'#!/bin/bash', ...
+sprintf("## Automatically generated on %s\n", timetxt), ...
+'cd data', ...
 sprintf("for i in {1..%d}; do", nQ), ...
 sprintf("  id=`printf %s $i`", suffix_fmt), ...
-'  nohup fswof2d -f parameters$id.txt &', ...
+'  nohup fswof2d-1.07 -f parameters$id.txt &', ...
 '  if(( ($i % $(nproc)) == 0)); then wait; fi', ...
 'done'
 };
@@ -157,4 +160,5 @@ fid = fopen (bfile, "wt");
 fputs (fid, bsh);
 fclose (fid);
 
-% save variables.dat X Y Z Nx Ny sim_duration studyFolder inputsFolder outputsFolder
+% Make file executable
+system ('chmod +x run.sh');
