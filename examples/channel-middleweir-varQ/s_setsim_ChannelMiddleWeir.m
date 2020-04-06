@@ -57,7 +57,6 @@ np = rx_alpha * [0 0 1].';
 ZZp = -(np(1)*XX + np(2)*YY) / np(3);
 ZZ = ZZp + ZZc;
 
-
 %% Generate initial conditions for h, u and v can be set to 0
 HH = ones (Ny, Nx);
 UU = zeros (Ny, Nx);
