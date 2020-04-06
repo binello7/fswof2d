@@ -21,21 +21,17 @@ close all
 
 if ~exist ('HZ_evl', 'var')
   %% Global parameters
-  %
   dataFolder  = "data";
   studyName   = "Channelweir";
-  suffix      = 2;
-  fsuf = @(s, n) strcat (s, sprintf ('_%02d', n));
 
   %% Read outputs from files
-  %
-  outputsFolder = fullfile (dataFolder, studyName, fsuf ('Outputs', suffix));
-  fname         = @(s) fullfile (outputsFolder, s);
+  outputsFolder = fullfile (dataFolder, 'Outputs');
 
+  fname         = @(s) fullfile (outputsFolder, s);
   data_init  = load (fname ('huz_initial.dat'));
   data_evl  = load (fname ('huz_evolution.dat'));
 
-  paramsfile = fullfile (dataFolder, studyName, 'Inputs', strcat (fsuf ('parameters', suffix), '.txt'));
+  paramsfile = fullfile (dataFolder, 'Inputs', strcat (fsuf ('parameters', suffix), '.txt'));
   params = read_params (paramsfile);
 
   %% Get topography and final state free surface
