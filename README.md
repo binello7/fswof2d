@@ -113,8 +113,8 @@ For more usage examples see [examples](examples/)
 * `extrude_csec`
 * `matplotlib_cm`
 
-
-
-
-
 ## Install
+From the root package directory do:
+```bash
+make dist; pkg="$(ls target/*.tar.gz)"; octave --eval  "pkg install $pkg"
+```
