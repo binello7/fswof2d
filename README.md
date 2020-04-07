@@ -44,7 +44,40 @@ topography. This can be accomplished with the function `extrude_csec`.
 Finally, the function `matplotlib_cm` allows import in *GNU Octave* of colormaps
 defined in the *Python-package* `matplotlib`.
 
-## Code examples
+## Code example
+```matlab
+pkg load fswof2d
+
+% Generate cross-section and plot it
+Nx = 100 % number of x-nodes
+[x z p xi zi] = csec_channel2lvlsym (Nx);
+elements = fieldnames (p);
+plot(x,z,'s-;mesh;',xi,zi,'*;knots;')
+hold on
+axis tight
+
+for i = 1:length (elements)
+  t = sprintf ("%s = %d", elements{i}, p.(elements{i}));
+  text (15, 12-0.5*i, t, 'fontsize', 8);
+end
+hold off
+print (fullfile (imgs_dir, 'csec.png'))
+
+% Extrude cross-section and plot it
+L = 200 % channel length
+Ny = 200 % number of y-nodes
+
+y = linspace (0, L, Ny);
+
+[X Y Z] = extrude_csec (x, y, z);
+m = mesh (X, Y, Z, 'edgecolor', 'k');
+axis equal
+axis tight
+set (gca, 'ztick', [min(z), max(z)])
+print (fullfile (imgs_dir, 'mesh.png'))
+```
+![](examples/images/csec.png)
+
 
 ## Complete Functions list
 * topo2file
