@@ -80,7 +80,7 @@ print (fullfile (imgs_dir, 'mesh.png'))
 <img src="examples/imgs/csec.png" height=300><img src="examples/imgs/mesh.png" height=300>
 
 ```matlab
-% Find the centers of the mesh
+% Find the centers of the mesh and plot them together with the mesh
 xc = node2center (x);
 yc = node2center (y);
 zc = node2center (z);
