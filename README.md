@@ -97,7 +97,7 @@ set (gca, 'ztick', [min(z), max(z)]);
 print (fullfile (imgs_dir, 'mesh-red.png'), '-r300')
 ```
 
-<img src="examples/imgs/centers.png" height=300>
+<img src="examples/imgs/centers.png">
 
 ## Complete Functions list
 * `topo2file`
