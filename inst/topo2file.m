@@ -26,10 +26,10 @@
 ## All values have to be given in FullSWOF_2D format (compare function
 ## @code{dataconvert}).
 ##
-## If no @var{filename} is specified the default name 
+## If no @var{filename} is specified the default name
 ## @code{topography.dat} is used.
 ##
-## @seealso{dataconvert, huv2file, plot_topo}
+## @seealso{dataconvert, huv2file}
 ## @end defun
 
 function topo2file (x, y, z, fname='topography.dat')
@@ -46,12 +46,11 @@ function topo2file (x, y, z, fname='topography.dat')
   timetxt = strftime ("%Y-%m-%d %H:%M:%S", localtime (time ()));
   header  = sprintf (header, timetxt);
 
-  fid = fopen (fname, 'w'); 
+  fid = fopen (fname, 'w');
   fdisp (fid, header);
-  precision = 15; 
+  precision = 15;
   fmt = [repmat(sprintf (" %%.%dg", precision), 1, 3) "\n"];
   fprintf (fid, fmt, [x y z].');
   fclose(fid);
 
 endfunction
-

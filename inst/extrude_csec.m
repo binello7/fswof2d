@@ -22,7 +22,7 @@
 ## Given a x-z cross-section profile, extrude it along the specified y-axis.
 ##
 ## The given values of the @var{y} vector represents the positions on the y-axis
-## where a cross-section will be copied. The @var{y} values don't 
+## where a cross-section will be copied. The @var{y} values don't
 ## have to be linearly spaced.
 ##
 ## @seealso{csec_channel2lvlsym}
@@ -52,7 +52,7 @@ endfunction
 %! [x z] = csec_channel2lvlsym (n);
 %! y = linspace (0,max(x)*3, 100).';
 %! [X Y Z] = extrude_csec (x, y, z);
-%! plot_topo (X,Y,Z);
+%! surf (X,Y,Z);
 
 %!demo
 %! n = struct("Embankment",20, "Plain",10,"RiverBank",20,"RiverBed",10);
@@ -62,7 +62,7 @@ endfunction
 %! nf =@(d1,d2) [cosd(d2).*sind(d1) sind(d2).*sind(d1) cosd(d1)];
 %! np = nf (10, 0);
 %! Zp = (np(1) * X + np(2) * Y ) ./ np(3);
-%! 
+%!
 %! x_ini = p.Embankment + p.Plain + p.RiverBank + 1;
 %! x_end = x_ini + p.RiverBed - 1;
 %! ch_mask = (X > x_ini & X < x_end);
@@ -72,15 +72,14 @@ endfunction
 %! zmin = min (Z(:));
 %! Z+= zmin;
 %!
-%! h = plot_topo (X,Y,Z);
-%! set (h.surf, 'edgecolor', 'k');
+%! h = surf (X,Y,Z);
 
 %!demo
 %! n = struct("Embankment",20, "Plain",10,"RiverBank",20,"RiverBed",10);
 %! [x z p] = csec_channel2lvlsym (n);
 %! y       = linspace (0,max(x)*3, 100).';
 %! [X Y Z] = extrude_csec (x, y, z);
-%! 
+%!
 %! w = p.RiverBed + p.RiverBank;
 %! DX = w/5 * sin (pi*Y/max(Y(:)));
 %! x_cen = p.Embankment + p.Plain + p.RiverBank + p.RiverBed/2;
@@ -88,5 +87,4 @@ endfunction
 %! s_mask = 2 * exp (- 0.5 * (X - x_cen).^4 / 2 / sigma.^4);
 %! Xt = X + DX.* s_mask;
 %!
-%! h = plot_topo (Xt,Y,Z);
-%! set (h.surf, 'edgecolor', 'k');
+%! h = surf (Xt,Y,Z);
