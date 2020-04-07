@@ -76,7 +76,7 @@ axis tight
 set (gca, 'ztick', [min(z), max(z)])
 print (fullfile (imgs_dir, 'mesh.png'))
 ```
-<img src="examples/imgs/csec.png" height=200><img src="examples/imgs/mesh.png" height=200>
+<img src="examples/imgs/csec.png" height=500><img src="examples/imgs/mesh.png" height=500>
 
 ## Complete Functions list
 * topo2file
