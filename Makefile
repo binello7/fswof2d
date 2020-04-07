@@ -236,8 +236,8 @@ check: $(install_stamp)
 .PHONY: clean
 
 clean: clean-tarballs clean-unpacked-release clean-install
-	@echo "## Removing target directory (if empty)..."
-	-rmdir $(target_dir)
+	@echo "## Removing target directory..."
+	-rm -r $(target_dir)
 	@echo
 	@echo "## Cleaning done"
 	@echo
