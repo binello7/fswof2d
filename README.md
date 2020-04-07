@@ -79,16 +79,16 @@ print (fullfile (imgs_dir, 'mesh.png'))
 <img src="examples/imgs/csec.png" height=300><img src="examples/imgs/mesh.png" height=300>
 
 ## Complete Functions list
-* topo2file
-* huv2file
-* params2file
-* read_params
-* dataconvert
-* center2node
-* node2center
-* csec_channel2lvlsym
-* extrude_csec
-* matplotlib_cm
+* `topo2file`
+* `huv2file`
+* `params2file`
+* `read_params`
+* `dataconvert`
+* `center2node`
+* `node2center`
+* `csec_channel2lvlsym`
+* `extrude_csec`
+* `matplotlib_cm`
 
 
 
