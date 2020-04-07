@@ -76,7 +76,7 @@ axis tight
 set (gca, 'ztick', [min(z), max(z)])
 print (fullfile (imgs_dir, 'mesh.png'))
 ```
-![](examples/images/csec.png)
+![](examples/imgs/csec.png) ![](examples/imgs/mesh.png)
 
 
 ## Complete Functions list
