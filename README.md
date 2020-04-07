@@ -99,6 +99,8 @@ print (fullfile (imgs_dir, 'mesh-red.png'), '-r300')
 
 <img src="examples/imgs/centers.png">
 
+For more usage examples see [examples](examples/)
+
 ## Complete Functions list
 * `topo2file`
 * `huv2file`
