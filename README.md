@@ -60,23 +60,44 @@ for i = 1:length (elements)
   t = sprintf ("%s = %d", elements{i}, p.(elements{i}));
   text (15, 12-0.5*i, t, 'fontsize', 8);
 end
+axis square
 hold off
 print (fullfile (imgs_dir, 'csec.png'))
 
 % Extrude cross-section and plot it
-L = 200 % channel length
-Ny = 200 % number of y-nodes
+L = 400 % channel length
+Ny = 100 % number of y-nodes
 
 y = linspace (0, L, Ny);
 
 [X Y Z] = extrude_csec (x, y, z);
-m = mesh (X, Y, Z, 'edgecolor', 'k');
+mesh (X, Y, Z, 'edgecolor', 'k');
 axis equal
 axis tight
-set (gca, 'ztick', [min(z), max(z)])
+set (gca, 'ztick', [min(z), max(z)]);
 print (fullfile (imgs_dir, 'mesh.png'))
 ```
 <img src="examples/imgs/csec.png" height=300><img src="examples/imgs/mesh.png" height=300>
+
+```matlab
+% Find the centers of the mesh
+xc = node2center (x);
+yc = node2center (y);
+zc = node2center (z);
+
+[XC YC ZC] = extrude_csec (xc, yc, zc);
+
+mesh (X, Y, Z, 'edgecolor', 'k');
+hold on
+p = scatter3 (XC, YC, ZC, 3, 'r', 'filled');
+hold off
+axis equal
+axis tight
+set (gca, 'ztick', [min(z), max(z)]);
+print (fullfile (imgs_dir, 'mesh-red.png'), '-r300')
+```
+
+<img src="examples/imgs/centers.png" height=300>
 
 ## Complete Functions list
 * `topo2file`
