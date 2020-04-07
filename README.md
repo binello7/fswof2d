@@ -9,11 +9,40 @@ FullSWOF_2D simulation are:
 * initial conditions file: *huv_init.dat*
 * simulation parameters file: *parameters.txt*
 
-Writing these files in a format fully-compatible with FullSWOF_2D (:heavy_exclamation_mark:v-1.07.00:heavy_exclamation_mark:) can be easily achieved by using the functions `topo2file`, `huv2file` and `params2file`.
+Writing these files in a format fully-compatible with FullSWOF_2D (:heavy_exclamation_mark:v-1.07.00:heavy_exclamation_mark:) can be easily
+achieved by using the functions `topo2file`, `huv2file` and `params2file`.
 
-The function `read_params` allows reading the parameters used for a given simulation (stored in the `parameters.txt` file) as a `struct`. This can be useful in order to carry out sensitivity analysis where one or more simulation parameters are to be varied.
+The function `read_params` allows reading the parameters used for a given
+simulation (stored in the `parameters.txt` file) as a `struct`. This can be
+useful in order to carry out sensitivity analysis where one or more simulation
+parameters are to be varied.
 
-*GNU Octave* and *FullSWOF_2D* have different ways of representing 3D meshes
+*GNU Octave* and *FullSWOF_2D* have different ways of representing 3D meshes.
+The function `dataconvert` makes passing from the `fswof2d` 3D mesh
+representation to the `octave` one and vice-versa an easy task. Mesh nodes
+coordinates have to be written to the *topography.dat* file in the `fswof2d`
+format. However, one would probably want to plot the mesh in *GNU Octave*, in
+order to check for correctness, before writing it to the file. `dataconvert`
+ensures proper conversion of the plotted `octave` mesh to the `fswof2d` format.
+
+Computations in *FullSWOF_2D* are performed at every cell center. For this
+reason, the *topography.dat* file must specify the X-Y coordinates of the cells
+centers and not of their nodes. If a coordinate in the topography file is
+located on the domain boundary (meaning it cannot represent the center of a
+cell), *FullSWOF_2D* throws an error. `node2center` converts therefore a vector
+of nodes coordinates to the corresponding vector of centers coordinates.
+`center2node` executes the inverse operation, returning a vector of nodes given
+a vector of centers.
+
+The function `csec_channel2lvlsym` simplifies the construction of a standard
+symmetric channel cross-section, composed of a riverbed, two riverbanks, two
+floodplains and two external embankments. The cross-section is discretized
+in `N` segments according to the user's needs. Once the cross-section is
+created, it has to be extruded along an axis, in order to result in a channel
+topography. This can be accomplished with the function `extrude_csec`.
+
+Finally, the function `matplotlib_cm` allows import in *GNU Octave* of colormaps
+defined in the *Python-package* `matplotlib`.
 
 ## Code examples
 
@@ -24,10 +53,11 @@ The function `read_params` allows reading the parameters used for a given simula
 * read_params
 * dataconvert
 * center2node
+* node2center
 * csec_channel2lvlsym
 * extrude_csec
 * matplotlib_cm
-* node2center
+
 
 
 
